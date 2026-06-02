@@ -331,6 +331,14 @@
   #presentation-app .kpi-spark{height:60px !important;max-height:60px !important;min-height:60px !important;flex:0 0 60px;opacity:1;width:100% !important}
   #presentation-app .kpi-sub{font-size:14px;line-height:1.5;max-height:none}
   #presentation-app .kpi-sub strong{font-size:16px}
+  /* KPI compacto (usado no topo do slide 5 como resumo, NÃO como destaque) */
+  #presentation-app .kpi.kpi-compact{min-height:0;height:auto;padding:20px 26px;gap:8px}
+  #presentation-app .kpi.kpi-compact .kpi-label{font-size:11px;letter-spacing:.26em}
+  #presentation-app .kpi.kpi-compact .kpi-num{font-size:52px;line-height:1}
+  #presentation-app .kpi.kpi-compact .kpi-num .unit{font-size:20px}
+  #presentation-app .kpi.kpi-compact .kpi-mid{justify-content:center;padding:4px 0}
+  #presentation-app .kpi.kpi-compact .kpi-foot{border-top:none;padding-top:0;min-height:0}
+  #presentation-app .kpi.kpi-compact .kpi-sub{font-size:12px}
 
   /* Panel escalado */
   #presentation-app .panel{padding:36px 44px;min-height:0;background:var(--bg-card);border:1px solid var(--line-soft)}
@@ -569,7 +577,8 @@
     border-top:30px solid transparent;border-bottom:30px solid transparent;border-left:16px solid var(--gold);
   }
   .ticker-label .pulse-dot{
-    width:10px;height:10px;border-radius:50%;background:#0a0a0a;
+    width:10px;height:10px;border-radius:50%;background:#ff1f3a;
+    box-shadow:0 0 8px rgba(255,31,58,.9),0 0 14px rgba(255,31,58,.5);
     animation:pulse-blink 1.4s infinite ease-in-out;
   }
   @keyframes pulse-blink{0%,100%{opacity:1}50%{opacity:.3}}
@@ -1466,18 +1475,18 @@
     <div class="pres-slide" data-slide="5">
       <div class="pres-eyebrow">Produtividade</div>
       <h1 class="pres-title">Aproveitamento da Equipe</h1>
-      <div class="kpi-grid grid-cols-3" style="margin-bottom:20px">
-        <div class="kpi" style="min-height:148px;height:148px">
+      <div class="kpi-grid grid-cols-3" style="margin-bottom:20px;flex:0 0 auto">
+        <div class="kpi kpi-compact">
           <div class="kpi-head"><div class="kpi-label">Média da Equipe</div></div>
           <div class="kpi-mid"><div class="kpi-num gold" id="presS5Avg">—<span class="unit">%</span></div></div>
           <div class="kpi-foot"><div class="kpi-sub" id="presS5AvgSub">— colaboradores ativos</div></div>
         </div>
-        <div class="kpi" style="min-height:148px;height:148px">
+        <div class="kpi kpi-compact">
           <div class="kpi-head"><div class="kpi-label">Captadas Totais (h)</div></div>
           <div class="kpi-mid"><div class="kpi-num" id="presS5Captadas">—<span class="unit">h</span></div></div>
           <div class="kpi-foot"><div class="kpi-sub" id="presS5CaptSub">jornada registrada hoje</div></div>
         </div>
-        <div class="kpi" style="min-height:148px;height:148px">
+        <div class="kpi kpi-compact">
           <div class="kpi-head"><div class="kpi-label">Top Score · destaque</div></div>
           <div class="kpi-mid"><div class="kpi-num ok" id="presS5Top">—</div></div>
           <div class="kpi-foot"><div class="kpi-sub" id="presS5TopName" style="color:var(--gold-soft);font-weight:700">—</div></div>
