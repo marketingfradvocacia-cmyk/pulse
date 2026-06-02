@@ -404,6 +404,15 @@
   .pres-progress-bar{position:absolute;top:0;left:0;bottom:0;background:var(--gold);width:0%;transition:width .25s linear}
   .pres-hint{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--text-faint);font-weight:600}
 
+  /* Botão Exit no header */
+  .pres-exit-btn{
+    margin-left:24px;width:44px;height:44px;
+    background:rgba(184,97,90,.1);border:1px solid var(--danger);color:var(--danger);
+    cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .25s;
+  }
+  .pres-exit-btn:hover{background:var(--danger);color:#fff;transform:rotate(90deg)}
+  .pres-exit-btn svg{width:20px;height:20px}
+
   /* ============ COLABORADOR ============ */
   .colab-avatar{
     width:88px;height:88px;border-radius:50%;
@@ -1347,6 +1356,9 @@
       <div class="time" id="presClockTime">—</div>
       <div class="date" id="presClockDate">—</div>
     </div>
+    <button class="pres-exit-btn" onclick="exitPresentation()" title="Sair (Esc)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
   </header>
 
   <main class="pres-stage" id="presStage">
@@ -1437,8 +1449,22 @@
     <div class="pres-slide" data-slide="5">
       <div class="pres-eyebrow">Produtividade</div>
       <h1 class="pres-title">Aproveitamento da Equipe</h1>
+      <div class="kpi-grid grid-cols-3" style="margin-bottom:24px">
+        <div class="kpi" style="min-height:140px;height:140px">
+          <div class="kpi-head"><div class="kpi-label">Média da Equipe</div></div>
+          <div class="kpi-mid"><div class="kpi-num gold" id="presS5Avg">—<span class="unit">%</span></div></div>
+        </div>
+        <div class="kpi" style="min-height:140px;height:140px">
+          <div class="kpi-head"><div class="kpi-label">Captadas Totais</div></div>
+          <div class="kpi-mid"><div class="kpi-num" id="presS5Captadas">—<span class="unit">h</span></div></div>
+        </div>
+        <div class="kpi" style="min-height:140px;height:140px">
+          <div class="kpi-head"><div class="kpi-label">Top Score</div></div>
+          <div class="kpi-mid"><div class="kpi-num ok" id="presS5Top">—</div></div>
+        </div>
+      </div>
       <div class="panel" style="flex:1;display:flex;flex-direction:column;justify-content:center">
-        <div class="panel-title">Aproveitamento WM · Captadas · Score</div>
+        <div class="panel-title">Por colaborador · Aproveitamento WM · Captadas · Score</div>
         <div class="bar-list" id="presBarList2"></div>
       </div>
     </div>
@@ -1476,43 +1502,35 @@
       </div>
     </div>
 
-    <!-- SLIDE 8: Colaborador Destaque (kpi cards) -->
+    <!-- SLIDE 8: Colaborador Destaque (kpi cards + tarefas) -->
     <div class="pres-slide" data-slide="8">
       <div class="pres-eyebrow">Performance Individual</div>
       <h1 class="pres-title">Colaborador Destaque</h1>
-      <div class="panel" style="display:flex;gap:36px;align-items:center;padding:36px 44px;margin-bottom:24px">
+      <div class="panel" style="display:flex;gap:36px;align-items:center;padding:24px 36px;margin-bottom:18px">
         <div class="pres-avatar" id="presTopAvatar">??</div>
         <div style="flex:1">
           <div class="eyebrow" style="color:var(--gold);font-size:11px;letter-spacing:.36em">Top performer do dia</div>
-          <div style="font-size:48px;font-weight:300;color:var(--text);letter-spacing:-.02em;margin-top:6px" id="presTopNome">—</div>
-          <div style="font-size:16px;color:var(--gold-soft);font-weight:600;letter-spacing:.12em;text-transform:uppercase;margin-top:8px" id="presTopFuncao">—</div>
+          <div style="font-size:40px;font-weight:300;color:var(--text);letter-spacing:-.02em;margin-top:4px" id="presTopNome">—</div>
+          <div style="font-size:14px;color:var(--gold-soft);font-weight:600;letter-spacing:.12em;text-transform:uppercase;margin-top:6px" id="presTopFuncao">—</div>
+        </div>
+        <div style="display:flex;gap:32px;align-items:baseline">
+          <div style="text-align:center">
+            <div style="font-size:48px;font-weight:200;color:var(--gold-soft);line-height:1" id="presTopAprov">—<span style="font-size:20px;color:var(--text-mute)">%</span></div>
+            <div style="font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--text-mute);font-weight:700;margin-top:4px">Aproveit.</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-size:48px;font-weight:200;color:var(--ok);line-height:1" id="presTopScore">—</div>
+            <div style="font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--text-mute);font-weight:700;margin-top:4px">Score</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-size:48px;font-weight:200;color:var(--text);line-height:1" id="presTopCaptadas">—<span style="font-size:20px;color:var(--text-mute)">h</span></div>
+            <div style="font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--text-mute);font-weight:700;margin-top:4px">Captadas</div>
+          </div>
         </div>
       </div>
-      <div class="kpi-grid grid-cols-3" style="flex:1">
-        <div class="kpi">
-          <div class="kpi-head">
-            <div class="kpi-icon icon-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <div class="kpi-label">Aproveitamento</div>
-          </div>
-          <div class="kpi-mid"><div class="kpi-num gold" id="presTopAprov">—<span class="unit">%</span></div></div>
-          <div class="kpi-foot"><div class="kpi-sub">% do tempo produtivo</div><canvas class="kpi-spark" data-spark="35,40,42,45,46,48,48" data-color="ok"></canvas></div>
-        </div>
-        <div class="kpi">
-          <div class="kpi-head">
-            <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
-            <div class="kpi-label">Score GenIA</div>
-          </div>
-          <div class="kpi-mid"><div class="kpi-num ok" id="presTopScore">—</div></div>
-          <div class="kpi-foot"><div class="kpi-sub">índice geral de produtividade</div><canvas class="kpi-spark" data-spark="40,42,44,45,46,48,48" data-color="gold"></canvas></div>
-        </div>
-        <div class="kpi">
-          <div class="kpi-head">
-            <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-            <div class="kpi-label">Horas Captadas</div>
-          </div>
-          <div class="kpi-mid"><div class="kpi-num gold" id="presTopCaptadas">—<span class="unit">h</span></div></div>
-          <div class="kpi-foot"><div class="kpi-sub">jornada registrada hoje</div><canvas class="kpi-spark" data-spark="3,4,4,5,5,5,5" data-color="gold"></canvas></div>
-        </div>
+      <div class="panel" style="flex:1;display:flex;flex-direction:column;padding:24px 36px">
+        <div class="panel-title">Tarefas atribuídas ao colaborador</div>
+        <div class="bar-list" id="presTopTasks" style="margin-top:8px"></div>
       </div>
     </div>
   </main>
@@ -1520,7 +1538,7 @@
   <footer class="pres-footer">
     <div class="pres-counter">Slide <strong id="presCounter">1</strong> / <strong id="presTotal">8</strong></div>
     <div class="pres-progress"><div class="pres-progress-bar" id="presProgressBar"></div></div>
-    <div class="pres-hint">Esc para sair</div>
+    <div class="pres-hint" id="presLoopInfo">Loop · 12s por slide</div>
   </footer>
 </div>
 
@@ -2128,6 +2146,17 @@ function showPresSlide(idx) {
   document.getElementById('presCounter').textContent = (idx + 1);
   document.getElementById('presTotal').textContent = PRES_SLIDES_COUNT;
   resetPresProgress();
+  // Força redesenho dos visuais quando o slide vira ativo (Chart.js precisa do canvas com dimensoes)
+  setTimeout(() => {
+    const slide = document.querySelectorAll('.pres-slide')[idx];
+    if (!slide) return;
+    // re-renderiza sparklines deste slide
+    slide.querySelectorAll('.kpi-spark').forEach(c => { delete c.dataset.rendered; });
+    if (typeof drawSparklines === 'function') drawSparklines(slide);
+    // resize donuts se forem deste slide
+    if (idx === 1 && presDonut1Chart) presDonut1Chart.resize();
+    if (idx === 5 && presDonut2Chart) presDonut2Chart.resize();
+  }, 250);
 }
 
 function startPresProgress() {
@@ -2245,17 +2274,42 @@ function populatePresentationData() {
     </div>`;
   }).join('');
 
-  // ===== Slide 4: Próximas 3 Audiências =====
-  document.getElementById('presNextAudiencias').innerHTML = audSorted.slice(0, 3).map(a => `
-    <div class="bar-list-item">
-      <div class="name">${a.data} ${a.dia} · ${a.tipo}</div>
-      <div class="track"><div class="fill" style="width:60%"></div></div>
-      <div class="value" style="color:var(--gold)">${a.hora}</div>
-    </div>
-  `).join('') || '<div style="color:var(--text-mute);text-align:center;padding:24px">Sem audiências agendadas</div>';
+  // ===== Slide 4: Próximas 3 Audiências (com contagem dias) =====
+  const hoje = new Date();
+  const anoAtual = hoje.getFullYear();
+  document.getElementById('presNextAudiencias').innerHTML = audSorted.slice(0, 3).map((a, i) => {
+    // calcula "em X dias"
+    const parts = (a.data || '').split('.');
+    let dias = '—';
+    if (parts.length >= 2) {
+      const dt = new Date(anoAtual, Number(parts[1])-1, Number(parts[0]));
+      dias = Math.max(0, Math.round((dt - hoje) / (1000*60*60*24)));
+    }
+    const tag = dias === 0 ? 'HOJE' : dias === 1 ? 'AMANHÃ' : `EM ${dias} DIAS`;
+    const tagColor = dias <= 3 ? 'var(--danger)' : dias <= 7 ? 'var(--warn)' : 'var(--gold)';
+    return `<div class="bar-list-item" style="grid-template-columns:auto 1fr auto">
+      <div style="display:flex;flex-direction:column;align-items:flex-start;min-width:130px">
+        <div style="font-size:22px;font-weight:600;color:var(--gold-soft);font-variant-numeric:tabular-nums">${a.data}</div>
+        <div style="font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:${tagColor};margin-top:4px">${tag}</div>
+      </div>
+      <div style="min-width:0">
+        <div style="font-size:22px;color:var(--text);font-weight:500">${a.tipo}</div>
+        <div style="font-size:14px;color:var(--text-mute);margin-top:4px">${a.processo}</div>
+      </div>
+      <div style="font-size:28px;font-weight:300;color:var(--gold);letter-spacing:.04em">${a.hora}</div>
+    </div>`;
+  }).join('') || '<div style="color:var(--text-mute);text-align:center;padding:24px">Sem audiências agendadas</div>';
 
-  // ===== Slide 5: Aproveitamento com captadas + score =====
-  const wmAtivos = workmonitor.filter(w => w.aprov > 0).sort((a,b) => b.aprov - a.aprov);
+  // ===== Slide 5: Aproveitamento (resumo + bar list) =====
+  const wmAtivosAll = workmonitor.filter(w => w.aprov > 0);
+  const avgAprov = wmAtivosAll.length > 0 ? (wmAtivosAll.reduce((sum,w) => sum + w.aprov, 0) / wmAtivosAll.length) : 0;
+  const totalCaptadas = wmAtivosAll.reduce((sum,w) => sum + w.captadas, 0);
+  const topScore = wmAtivosAll.length > 0 ? Math.max(...wmAtivosAll.map(w => w.score)) : 0;
+  document.getElementById('presS5Avg').innerHTML = avgAprov.toFixed(0) + '<span class="unit">%</span>';
+  document.getElementById('presS5Captadas').innerHTML = totalCaptadas.toFixed(1).replace('.',',') + '<span class="unit">h</span>';
+  document.getElementById('presS5Top').textContent = topScore.toFixed(1).replace('.',',');
+
+  const wmAtivos = wmAtivosAll.sort((a,b) => b.aprov - a.aprov);
   const maxAprov = Math.max(...wmAtivos.map(w => w.aprov), 1);
   document.getElementById('presBarList2').innerHTML = wmAtivos.map(w => {
     const cls = w.aprov >= 50 ? 'ok' : w.aprov >= 25 ? '' : 'warn';
@@ -2309,7 +2363,7 @@ function populatePresentationData() {
     </div>
   `).join('') || '<div style="color:var(--text-mute);text-align:center;padding:24px">Nenhuma publicação pendente 🎉</div>';
 
-  // ===== Slide 8 (NOVO): Colaborador Destaque =====
+  // ===== Slide 8 (NOVO): Colaborador Destaque + tarefas =====
   const topPerformer = [...workmonitor].sort((a,b) => b.score - a.score)[0];
   if (topPerformer) {
     const rk = ranking.find(r => normalize(r.nome) === normalize(topPerformer.nome))
@@ -2318,9 +2372,23 @@ function populatePresentationData() {
     document.getElementById('presTopAvatar').textContent = initials;
     document.getElementById('presTopNome').textContent = topPerformer.nome;
     document.getElementById('presTopFuncao').textContent = (rk && rk.funcao) || 'Colaborador(a)';
-    document.getElementById('presTopAprov').innerHTML = topPerformer.aprov.toFixed(0) + '<span class="unit">%</span>';
+    document.getElementById('presTopAprov').innerHTML = topPerformer.aprov.toFixed(0) + '<span style="font-size:20px;color:var(--text-mute)">%</span>';
     document.getElementById('presTopScore').textContent = topPerformer.score.toFixed(2).replace('.',',');
-    document.getElementById('presTopCaptadas').innerHTML = topPerformer.captadas.toFixed(2).replace('.',',') + '<span class="unit">h</span>';
+    document.getElementById('presTopCaptadas').innerHTML = topPerformer.captadas.toFixed(2).replace('.',',') + '<span style="font-size:20px;color:var(--text-mute)">h</span>';
+    // Tarefas atribuídas a esse colaborador
+    const firstName = normalize(topPerformer.nome).split(' ')[0];
+    const topTasks = tarefasParadas.filter(t => normalize(t.resp).startsWith(firstName));
+    document.getElementById('presTopTasks').innerHTML = topTasks.length > 0
+      ? topTasks.slice(0, 6).map(t => {
+          const cls = t.feito ? 'ok' : 'warn';
+          const label = t.feito ? 'Feito' : 'Pendente';
+          return `<div class="bar-list-item">
+            <div class="name">${t.titulo}</div>
+            <div class="track"><div class="fill ${cls}" style="width:${t.feito ? '100' : '50'}%"></div></div>
+            <div class="value ${cls}">${label}</div>
+          </div>`;
+        }).join('')
+      : '<div style="color:var(--text-mute);text-align:center;padding:24px">Nenhuma tarefa registrada</div>';
   }
 
   // Desenha sparklines dos KPIs (mesmo sistema do dashboard)
