@@ -664,6 +664,15 @@
   #common-app .alert-title{font-size:11px;letter-spacing:.3em}
   #common-app .alert-body{font-size:14px;line-height:1.7}
 
+  /* Ticker dentro da apresentação · escala XL */
+  #presentation-app .pres-ticker{height:62px;flex-shrink:0;border-bottom:1px solid var(--line)}
+  #presentation-app .pres-ticker .ticker-label{font-size:14px;padding:0 28px;letter-spacing:.4em}
+  #presentation-app .pres-ticker .ticker-label::after{border-top:31px solid transparent;border-bottom:31px solid transparent}
+  #presentation-app .pres-ticker .ticker-label .pulse-dot{width:11px;height:11px}
+  #presentation-app .pres-ticker .ticker-item{font-size:18px;padding:0 40px}
+  #presentation-app .pres-ticker .ticker-item strong{font-size:23px}
+  #presentation-app .pres-ticker .ticker-item::before{width:7px;height:7px}
+
   /* Ticker maior só no Common */
   #common-app .ticker{height:74px}
   #common-app .ticker-label{font-size:15px;padding:0 32px;letter-spacing:.4em}
@@ -1342,8 +1351,7 @@
 <!-- ============ MODO APRESENTAÇÃO (página separada) ============ -->
 <div id="presentation-app">
   <header class="pres-header">
-    <div class="pres-live"><span class="dot"></span>Ao Vivo</div>
-    <div class="pres-header-stats" id="presHeaderStats">
+    <div class="pres-header-stats" id="presHeaderStats" style="justify-content:flex-start;padding-left:8px">
       <span class="ps-item"><strong id="phsPrazos">—</strong> prazos</span>
       <span class="ps-sep">·</span>
       <span class="ps-item"><strong id="phsTarefas">—</strong> tarefas</span>
@@ -1360,6 +1368,13 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
   </header>
+  <!-- Ticker Ao Vivo (mesmo dos modos master/equipe) -->
+  <div class="ticker pres-ticker">
+    <div class="ticker-label"><span class="pulse-dot"></span>Ao Vivo</div>
+    <div class="ticker-viewport">
+      <div class="ticker-track" id="presTicker"></div>
+    </div>
+  </div>
 
   <main class="pres-stage" id="presStage">
     <!-- SLIDE 1: PANORAMA (4 KPI cards iguais dashboard) -->
@@ -1445,22 +1460,25 @@
       </div>
     </div>
 
-    <!-- SLIDE 5: Aproveitamento (bar-list com aprov + captadas + score) -->
+    <!-- SLIDE 5: Aproveitamento + Top performer (bar-list com aprov + captadas + score) -->
     <div class="pres-slide" data-slide="5">
       <div class="pres-eyebrow">Produtividade</div>
       <h1 class="pres-title">Aproveitamento da Equipe</h1>
-      <div class="kpi-grid grid-cols-3" style="margin-bottom:24px">
-        <div class="kpi" style="min-height:140px;height:140px">
+      <div class="kpi-grid grid-cols-3" style="margin-bottom:20px">
+        <div class="kpi" style="min-height:148px;height:148px">
           <div class="kpi-head"><div class="kpi-label">Média da Equipe</div></div>
           <div class="kpi-mid"><div class="kpi-num gold" id="presS5Avg">—<span class="unit">%</span></div></div>
+          <div class="kpi-foot"><div class="kpi-sub" id="presS5AvgSub">— colaboradores ativos</div></div>
         </div>
-        <div class="kpi" style="min-height:140px;height:140px">
-          <div class="kpi-head"><div class="kpi-label">Captadas Totais</div></div>
+        <div class="kpi" style="min-height:148px;height:148px">
+          <div class="kpi-head"><div class="kpi-label">Captadas Totais (h)</div></div>
           <div class="kpi-mid"><div class="kpi-num" id="presS5Captadas">—<span class="unit">h</span></div></div>
+          <div class="kpi-foot"><div class="kpi-sub" id="presS5CaptSub">jornada registrada hoje</div></div>
         </div>
-        <div class="kpi" style="min-height:140px;height:140px">
-          <div class="kpi-head"><div class="kpi-label">Top Score</div></div>
+        <div class="kpi" style="min-height:148px;height:148px">
+          <div class="kpi-head"><div class="kpi-label">Top Score · destaque</div></div>
           <div class="kpi-mid"><div class="kpi-num ok" id="presS5Top">—</div></div>
+          <div class="kpi-foot"><div class="kpi-sub" id="presS5TopName" style="color:var(--gold-soft);font-weight:700">—</div></div>
         </div>
       </div>
       <div class="panel" style="flex:1;display:flex;flex-direction:column;justify-content:center">
@@ -1469,11 +1487,11 @@
       </div>
     </div>
 
-    <!-- SLIDE 6: Status Tarefas + lista pendentes -->
+    <!-- SLIDE 6: Status Tarefas + Pendentes + Publicações (3 col) -->
     <div class="pres-slide" data-slide="6">
-      <div class="pres-eyebrow">Tarefas em Acompanhamento</div>
-      <h1 class="pres-title">Status Geral</h1>
-      <div class="panels-grid grid-cols-2">
+      <div class="pres-eyebrow">Tarefas e Publicações</div>
+      <h1 class="pres-title">Status de Execução</h1>
+      <div class="panels-grid" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;flex:1">
         <div class="panel">
           <div class="panel-title">Status de Conclusão</div>
           <div class="big-donut">
@@ -1489,54 +1507,16 @@
           <div class="panel-title">Tarefas pendentes mais próximas</div>
           <div class="bar-list" id="presPendentesList" style="margin-top:8px"></div>
         </div>
-      </div>
-    </div>
-
-    <!-- SLIDE 7: Publicações Pendentes (bar-list) -->
-    <div class="pres-slide" data-slide="7">
-      <div class="pres-eyebrow">Movimentação Processual</div>
-      <h1 class="pres-title">Publicações a Tratar</h1>
-      <div class="panel" style="flex:1;display:flex;flex-direction:column;justify-content:center">
-        <div class="panel-title">Publicações aguardando tratamento</div>
-        <div class="bar-list" id="presPublicacoesList"></div>
-      </div>
-    </div>
-
-    <!-- SLIDE 8: Colaborador Destaque (kpi cards + tarefas) -->
-    <div class="pres-slide" data-slide="8">
-      <div class="pres-eyebrow">Performance Individual</div>
-      <h1 class="pres-title">Colaborador Destaque</h1>
-      <div class="panel" style="display:flex;gap:36px;align-items:center;padding:24px 36px;margin-bottom:18px">
-        <div class="pres-avatar" id="presTopAvatar">??</div>
-        <div style="flex:1">
-          <div class="eyebrow" style="color:var(--gold);font-size:11px;letter-spacing:.36em">Top performer do dia</div>
-          <div style="font-size:40px;font-weight:300;color:var(--text);letter-spacing:-.02em;margin-top:4px" id="presTopNome">—</div>
-          <div style="font-size:14px;color:var(--gold-soft);font-weight:600;letter-spacing:.12em;text-transform:uppercase;margin-top:6px" id="presTopFuncao">—</div>
+        <div class="panel">
+          <div class="panel-title">Publicações a tratar</div>
+          <div class="bar-list" id="presPublicacoesList" style="margin-top:8px"></div>
         </div>
-        <div style="display:flex;gap:32px;align-items:baseline">
-          <div style="text-align:center">
-            <div style="font-size:48px;font-weight:200;color:var(--gold-soft);line-height:1" id="presTopAprov">—<span style="font-size:20px;color:var(--text-mute)">%</span></div>
-            <div style="font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--text-mute);font-weight:700;margin-top:4px">Aproveit.</div>
-          </div>
-          <div style="text-align:center">
-            <div style="font-size:48px;font-weight:200;color:var(--ok);line-height:1" id="presTopScore">—</div>
-            <div style="font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--text-mute);font-weight:700;margin-top:4px">Score</div>
-          </div>
-          <div style="text-align:center">
-            <div style="font-size:48px;font-weight:200;color:var(--text);line-height:1" id="presTopCaptadas">—<span style="font-size:20px;color:var(--text-mute)">h</span></div>
-            <div style="font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--text-mute);font-weight:700;margin-top:4px">Captadas</div>
-          </div>
-        </div>
-      </div>
-      <div class="panel" style="flex:1;display:flex;flex-direction:column;padding:24px 36px">
-        <div class="panel-title">Tarefas atribuídas ao colaborador</div>
-        <div class="bar-list" id="presTopTasks" style="margin-top:8px"></div>
       </div>
     </div>
   </main>
 
   <footer class="pres-footer">
-    <div class="pres-counter">Slide <strong id="presCounter">1</strong> / <strong id="presTotal">8</strong></div>
+    <div class="pres-counter">Slide <strong id="presCounter">1</strong> / <strong id="presTotal">6</strong></div>
     <div class="pres-progress"><div class="pres-progress-bar" id="presProgressBar"></div></div>
     <div class="pres-hint" id="presLoopInfo">Loop · 12s por slide</div>
   </footer>
@@ -2097,7 +2077,7 @@ function initMaster() {
 // ====== MODO APRESENTAÇÃO ======
 const PRES_SLIDE_SECONDS = 12;       // tempo por slide
 const PRES_REFRESH_MINUTES = 5;      // recarrega dados a cada 5min
-const PRES_SLIDES_COUNT = 8;
+const PRES_SLIDES_COUNT = 6;
 let presSlideIdx = 0;
 let presSlideTimer = null;
 let presRefreshTimer = null;
@@ -2300,14 +2280,25 @@ function populatePresentationData() {
     </div>`;
   }).join('') || '<div style="color:var(--text-mute);text-align:center;padding:24px">Sem audiências agendadas</div>';
 
-  // ===== Slide 5: Aproveitamento (resumo + bar list) =====
+  // ===== Slide 5: Aproveitamento (resumo + top performer + bar list) =====
   const wmAtivosAll = workmonitor.filter(w => w.aprov > 0);
   const avgAprov = wmAtivosAll.length > 0 ? (wmAtivosAll.reduce((sum,w) => sum + w.aprov, 0) / wmAtivosAll.length) : 0;
   const totalCaptadas = wmAtivosAll.reduce((sum,w) => sum + w.captadas, 0);
-  const topScore = wmAtivosAll.length > 0 ? Math.max(...wmAtivosAll.map(w => w.score)) : 0;
+  const topPerf = wmAtivosAll.length > 0 ? [...wmAtivosAll].sort((a,b) => b.score - a.score)[0] : null;
+  const topScoreVal = topPerf ? topPerf.score : 0;
   document.getElementById('presS5Avg').innerHTML = avgAprov.toFixed(0) + '<span class="unit">%</span>';
+  document.getElementById('presS5AvgSub').textContent = wmAtivosAll.length + ' colaboradores ativos';
   document.getElementById('presS5Captadas').innerHTML = totalCaptadas.toFixed(1).replace('.',',') + '<span class="unit">h</span>';
-  document.getElementById('presS5Top').textContent = topScore.toFixed(1).replace('.',',');
+  document.getElementById('presS5CaptSub').textContent = 'jornada registrada hoje';
+  document.getElementById('presS5Top').textContent = topScoreVal.toFixed(2).replace('.',',');
+  if (topPerf) {
+    const rkTop = ranking.find(r => normalize(r.nome) === normalize(topPerf.nome))
+              || ranking.find(r => normalize(r.nome).startsWith(normalize(topPerf.nome).split(' ')[0]));
+    const funcao = (rkTop && rkTop.funcao) || 'Colaborador(a)';
+    document.getElementById('presS5TopName').textContent = topPerf.nome + ' · ' + funcao;
+  } else {
+    document.getElementById('presS5TopName').textContent = '—';
+  }
 
   const wmAtivos = wmAtivosAll.sort((a,b) => b.aprov - a.aprov);
   const maxAprov = Math.max(...wmAtivos.map(w => w.aprov), 1);
@@ -2353,8 +2344,8 @@ function populatePresentationData() {
     </div>
   `).join('') || '<div style="color:var(--text-mute);text-align:center;padding:24px">Nenhuma tarefa pendente 🎉</div>';
 
-  // ===== Slide 7 (NOVO): Publicações Pendentes =====
-  const pubsPendentes = publicacoes.filter(p => p.status === 'pendente').slice(0, 6);
+  // ===== Slide 6 (3ª col): Publicações Pendentes =====
+  const pubsPendentes = publicacoes.filter(p => p.status === 'pendente').slice(0, 5);
   document.getElementById('presPublicacoesList').innerHTML = pubsPendentes.map(p => `
     <div class="bar-list-item">
       <div class="name">${p.data} · ${p.processo}</div>
@@ -2363,33 +2354,8 @@ function populatePresentationData() {
     </div>
   `).join('') || '<div style="color:var(--text-mute);text-align:center;padding:24px">Nenhuma publicação pendente 🎉</div>';
 
-  // ===== Slide 8 (NOVO): Colaborador Destaque + tarefas =====
-  const topPerformer = [...workmonitor].sort((a,b) => b.score - a.score)[0];
-  if (topPerformer) {
-    const rk = ranking.find(r => normalize(r.nome) === normalize(topPerformer.nome))
-            || ranking.find(r => normalize(r.nome).startsWith(normalize(topPerformer.nome).split(' ')[0]));
-    const initials = topPerformer.nome.split(' ').map(p => p[0]).slice(0,2).join('').toUpperCase();
-    document.getElementById('presTopAvatar').textContent = initials;
-    document.getElementById('presTopNome').textContent = topPerformer.nome;
-    document.getElementById('presTopFuncao').textContent = (rk && rk.funcao) || 'Colaborador(a)';
-    document.getElementById('presTopAprov').innerHTML = topPerformer.aprov.toFixed(0) + '<span style="font-size:20px;color:var(--text-mute)">%</span>';
-    document.getElementById('presTopScore').textContent = topPerformer.score.toFixed(2).replace('.',',');
-    document.getElementById('presTopCaptadas').innerHTML = topPerformer.captadas.toFixed(2).replace('.',',') + '<span style="font-size:20px;color:var(--text-mute)">h</span>';
-    // Tarefas atribuídas a esse colaborador
-    const firstName = normalize(topPerformer.nome).split(' ')[0];
-    const topTasks = tarefasParadas.filter(t => normalize(t.resp).startsWith(firstName));
-    document.getElementById('presTopTasks').innerHTML = topTasks.length > 0
-      ? topTasks.slice(0, 6).map(t => {
-          const cls = t.feito ? 'ok' : 'warn';
-          const label = t.feito ? 'Feito' : 'Pendente';
-          return `<div class="bar-list-item">
-            <div class="name">${t.titulo}</div>
-            <div class="track"><div class="fill ${cls}" style="width:${t.feito ? '100' : '50'}%"></div></div>
-            <div class="value ${cls}">${label}</div>
-          </div>`;
-        }).join('')
-      : '<div style="color:var(--text-mute);text-align:center;padding:24px">Nenhuma tarefa registrada</div>';
-  }
+  // ===== Ticker Ao Vivo (mesmo dos modos master/equipe) =====
+  if (typeof renderTicker === 'function') renderTicker('presTicker');
 
   // Desenha sparklines dos KPIs (mesmo sistema do dashboard)
   // Limpa flag "rendered" pra forçar redesenho ao entrar
