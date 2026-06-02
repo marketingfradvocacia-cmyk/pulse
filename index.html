@@ -317,17 +317,18 @@
   #presentation-app .panels-grid.grid-cols-3{grid-template-columns:1fr 1fr 1fr}
 
   /* KPI Card escalado pra apresentação */
-  #presentation-app .kpi{min-height:320px;padding:36px;background:var(--bg-card);border:1px solid var(--line-soft);gap:18px}
+  #presentation-app .kpi{min-height:260px;height:260px;padding:28px;background:var(--bg-card);border:1px solid var(--line-soft);gap:14px;justify-content:space-between}
   #presentation-app .kpi::before{width:80px;height:2px}
-  #presentation-app .kpi-head{gap:18px}
-  #presentation-app .kpi-icon{width:60px;height:60px;border-radius:10px}
-  #presentation-app .kpi-icon svg{width:30px;height:30px}
-  #presentation-app .kpi-label{font-size:13px;letter-spacing:.3em;line-height:1.4}
-  #presentation-app .kpi-num{font-size:88px;line-height:.9}
-  #presentation-app .kpi-num .unit{font-size:36px}
-  #presentation-app .kpi-foot{height:90px;gap:10px}
-  #presentation-app .kpi-spark{height:46px !important;max-height:46px !important;min-height:46px !important;flex:0 0 46px}
-  #presentation-app .kpi-sub{font-size:13px;line-height:1.5;max-height:42px}
+  #presentation-app .kpi-head{gap:16px}
+  #presentation-app .kpi-icon{width:52px;height:52px;border-radius:10px}
+  #presentation-app .kpi-icon svg{width:26px;height:26px}
+  #presentation-app .kpi-label{font-size:12px;letter-spacing:.28em;line-height:1.4}
+  #presentation-app .kpi-mid{flex:1;display:flex;align-items:center;justify-content:flex-start}
+  #presentation-app .kpi-num{font-size:72px;line-height:.95;font-weight:200}
+  #presentation-app .kpi-num .unit{font-size:28px}
+  #presentation-app .kpi-foot{height:96px;flex:0 0 96px;gap:8px}
+  #presentation-app .kpi-spark{height:50px !important;max-height:50px !important;min-height:50px !important;flex:0 0 50px;opacity:1}
+  #presentation-app .kpi-sub{font-size:12px;line-height:1.4;max-height:36px}
 
   /* Panel escalado */
   #presentation-app .panel{padding:36px 44px;min-height:0;background:var(--bg-card);border:1px solid var(--line-soft)}
@@ -1517,7 +1518,7 @@
   </main>
 
   <footer class="pres-footer">
-    <div class="pres-counter">Slide <strong id="presCounter">1</strong> / <strong id="presTotal">6</strong></div>
+    <div class="pres-counter">Slide <strong id="presCounter">1</strong> / <strong id="presTotal">8</strong></div>
     <div class="pres-progress"><div class="pres-progress-bar" id="presProgressBar"></div></div>
     <div class="pres-hint">Esc para sair</div>
   </footer>
@@ -2323,8 +2324,14 @@ function populatePresentationData() {
   }
 
   // Desenha sparklines dos KPIs (mesmo sistema do dashboard)
-  if (typeof drawSparklines === 'function') {
-    drawSparklines(document.getElementById('presentation-app'));
+  // Limpa flag "rendered" pra forçar redesenho ao entrar
+  const presApp = document.getElementById('presentation-app');
+  if (presApp) {
+    presApp.querySelectorAll('.kpi-spark').forEach(c => { delete c.dataset.rendered; });
+    if (typeof drawSparklines === 'function') {
+      // Pequeno delay pra garantir que o presentation-app está visível
+      setTimeout(() => drawSparklines(presApp), 100);
+    }
   }
 }
 
