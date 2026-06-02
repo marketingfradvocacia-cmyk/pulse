@@ -340,6 +340,28 @@
   #presentation-app .kpi.kpi-compact .kpi-foot{border-top:none;padding-top:0;min-height:0}
   #presentation-app .kpi.kpi-compact .kpi-sub{font-size:12px}
 
+  /* Slide 5 (Aproveitamento) · bar-list sem vazar, sem hover, valores alinhados em colunas fixas */
+  #presentation-app .pres-slide[data-slide="5"] .panel{overflow:hidden;min-height:0}
+  #presentation-app .pres-slide[data-slide="5"] .bar-list{gap:14px;overflow:hidden}
+  #presentation-app .pres-slide[data-slide="5"] .bar-list-item{
+    grid-template-columns:220px 1fr 90px 80px 70px !important;
+    gap:18px;padding:6px 0;
+  }
+  #presentation-app .pres-slide[data-slide="5"] .bar-list-item:hover{padding-left:0;background:transparent}
+  #presentation-app .pres-slide[data-slide="5"] .bar-list-item:hover .name{color:var(--text)}
+  #presentation-app .pres-slide[data-slide="5"] .bar-list-item:hover .value{transform:none;font-weight:600}
+  #presentation-app .pres-slide[data-slide="5"] .bar-list-item .name{font-size:17px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #presentation-app .pres-slide[data-slide="5"] .bar-list-item .track{height:10px}
+  #presentation-app .pres-slide[data-slide="5"] .bar-list-item .col-aprov{
+    font-size:20px;font-weight:600;color:var(--gold-soft);text-align:right;font-variant-numeric:tabular-nums;letter-spacing:.02em;
+  }
+  #presentation-app .pres-slide[data-slide="5"] .bar-list-item .col-capt{
+    font-size:14px;font-weight:500;color:var(--text-mute);text-align:right;font-variant-numeric:tabular-nums;
+  }
+  #presentation-app .pres-slide[data-slide="5"] .bar-list-item .col-score{
+    font-size:16px;font-weight:600;color:var(--ok);text-align:right;font-variant-numeric:tabular-nums;
+  }
+
   /* Panel escalado */
   #presentation-app .panel{padding:36px 44px;min-height:0;background:var(--bg-card);border:1px solid var(--line-soft)}
   #presentation-app .panel-title{font-size:13px;letter-spacing:.32em;margin-bottom:24px}
@@ -1490,8 +1512,15 @@
           <div class="kpi-foot"><div class="kpi-sub" id="presS5TopName" style="color:var(--gold-soft);font-weight:700">—</div></div>
         </div>
       </div>
-      <div class="panel" style="flex:1;display:flex;flex-direction:column;justify-content:center">
-        <div class="panel-title">Por colaborador · Aproveitamento WM · Captadas · Score</div>
+      <div class="panel" style="flex:1;display:flex;flex-direction:column;min-height:0">
+        <div class="panel-title">Top 7 colaboradores · Aproveitamento · Captadas · Score</div>
+        <div style="display:grid;grid-template-columns:220px 1fr 90px 80px 70px;gap:18px;padding:6px 0 12px;border-bottom:1px solid var(--line-soft);margin-bottom:8px;font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--text-faint);font-weight:700">
+          <div>Colaborador</div>
+          <div></div>
+          <div style="text-align:right">Aprov.</div>
+          <div style="text-align:right">Captadas</div>
+          <div style="text-align:right">Score</div>
+        </div>
         <div class="bar-list" id="presBarList2"></div>
       </div>
     </div>
@@ -2300,16 +2329,15 @@ function populatePresentationData() {
 
   const wmAtivos = wmAtivosAll.sort((a,b) => b.aprov - a.aprov);
   const maxAprov = Math.max(...wmAtivos.map(w => w.aprov), 1);
-  document.getElementById('presBarList2').innerHTML = wmAtivos.map(w => {
+  // Top 7 por aproveitamento (evita estourar painel verticalmente)
+  document.getElementById('presBarList2').innerHTML = wmAtivos.slice(0, 7).map(w => {
     const cls = w.aprov >= 50 ? 'ok' : w.aprov >= 25 ? '' : 'warn';
-    return `<div class="bar-list-item" style="grid-template-columns:240px 1fr auto">
+    return `<div class="bar-list-item">
       <div class="name">${w.nome}</div>
       <div class="track"><div class="fill ${cls}" style="width:${(w.aprov/maxAprov)*100}%"></div></div>
-      <div class="value" style="display:flex;gap:18px;align-items:baseline">
-        <span style="color:var(--gold-soft);min-width:70px;text-align:right;font-size:22px">${w.aprov.toFixed(0)}%</span>
-        <span style="color:var(--text-mute);font-size:15px;font-weight:500;min-width:60px;text-align:right">${w.captadas.toFixed(2).replace('.',',')}h</span>
-        <span style="color:var(--ok);font-size:18px;min-width:60px;text-align:right">${w.score.toFixed(1).replace('.',',')}</span>
-      </div>
+      <div class="col-aprov">${w.aprov.toFixed(0)}%</div>
+      <div class="col-capt">${w.captadas.toFixed(2).replace('.',',')}h</div>
+      <div class="col-score">${w.score.toFixed(1).replace('.',',')}</div>
     </div>`;
   }).join('');
 
