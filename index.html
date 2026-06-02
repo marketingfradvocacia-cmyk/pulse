@@ -306,37 +306,47 @@
 
   .pres-eyebrow{font-size:11px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:6px}
   .pres-title{font-size:46px;font-weight:300;color:var(--text);letter-spacing:-.02em;margin:0 0 32px}
-  .pres-grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;flex:1}
-  .pres-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:36px;flex:1}
-  .pres-kpi{background:var(--bg-card);border:1px solid var(--line-soft);padding:36px;display:flex;flex-direction:column;justify-content:space-between;position:relative;min-height:280px}
-  .pres-kpi::before{content:'';position:absolute;top:0;left:0;width:60px;height:2px;background:var(--gold)}
-  .pres-kpi-num{font-size:128px;font-weight:200;color:var(--gold-soft);line-height:.9;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
-  .pres-kpi-num .unit{font-size:48px;color:var(--text-mute)}
-  .pres-kpi-num.ok{color:var(--ok)}
-  .pres-kpi-num.warn{color:var(--warn)}
-  .pres-kpi-num.danger{color:var(--danger)}
-  .pres-kpi-label{font-size:14px;letter-spacing:.28em;text-transform:uppercase;color:var(--text);font-weight:700}
-  .pres-kpi-sub{font-size:12px;color:var(--text-mute);margin-top:8px;font-weight:400;letter-spacing:.02em}
 
-  .pres-donut-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center}
-  .pres-donut-wrap canvas{max-width:480px !important;max-height:480px !important;height:480px !important}
-  .pres-donut-overlay{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
-  .pres-donut-value{font-size:120px;font-weight:200;color:var(--gold-soft);letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1}
-  .pres-donut-value .unit{font-size:48px;color:var(--text-mute)}
-  .pres-donut-label{font-size:14px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-top:10px}
+  /* Container interno reusa .kpi-grid, .panels-grid, .kpi, .panel, .bar-list, .big-donut, etc. */
+  /* Overrides de escala (gigante) pros componentes do dashboard quando dentro da apresentação */
+  #presentation-app .kpi-grid{display:grid;gap:24px;background:transparent;margin:0}
+  #presentation-app .kpi-grid.grid-cols-4{grid-template-columns:repeat(4,1fr)}
+  #presentation-app .kpi-grid.grid-cols-3{grid-template-columns:repeat(3,1fr)}
+  #presentation-app .panels-grid{display:grid;gap:24px;background:transparent;margin:0;flex:1}
+  #presentation-app .panels-grid.grid-cols-2{grid-template-columns:1fr 1fr}
+  #presentation-app .panels-grid.grid-cols-3{grid-template-columns:1fr 1fr 1fr}
 
-  .pres-side-stat{background:var(--bg-card);border:1px solid var(--line-soft);padding:36px;display:flex;flex-direction:column;justify-content:center;position:relative}
-  .pres-side-stat::before{content:'';position:absolute;top:0;left:0;width:60px;height:2px;background:var(--gold)}
+  /* KPI Card escalado pra apresentação */
+  #presentation-app .kpi{min-height:320px;padding:36px;background:var(--bg-card);border:1px solid var(--line-soft);gap:18px}
+  #presentation-app .kpi::before{width:80px;height:2px}
+  #presentation-app .kpi-head{gap:18px}
+  #presentation-app .kpi-icon{width:60px;height:60px;border-radius:10px}
+  #presentation-app .kpi-icon svg{width:30px;height:30px}
+  #presentation-app .kpi-label{font-size:13px;letter-spacing:.3em;line-height:1.4}
+  #presentation-app .kpi-num{font-size:88px;line-height:.9}
+  #presentation-app .kpi-num .unit{font-size:36px}
+  #presentation-app .kpi-foot{height:90px;gap:10px}
+  #presentation-app .kpi-spark{height:46px !important;max-height:46px !important;min-height:46px !important;flex:0 0 46px}
+  #presentation-app .kpi-sub{font-size:13px;line-height:1.5;max-height:42px}
 
-  .pres-bar-list{display:flex;flex-direction:column;gap:24px}
-  .pres-bar-item{display:grid;grid-template-columns:220px 1fr 80px;align-items:center;gap:24px}
-  .pres-bar-item .name{font-size:22px;color:var(--text);font-weight:500}
-  .pres-bar-item .track{height:18px;background:#1f1f1f;border-radius:3px;overflow:hidden}
-  .pres-bar-item .fill{height:100%;background:linear-gradient(90deg,var(--gold-deep),var(--gold-soft))}
-  .pres-bar-item .fill.ok{background:linear-gradient(90deg,#4d6e4a,var(--ok))}
-  .pres-bar-item .fill.warn{background:linear-gradient(90deg,#8b7440,var(--warn))}
-  .pres-bar-item .fill.danger{background:linear-gradient(90deg,#7a3f3a,var(--danger))}
-  .pres-bar-item .value{font-size:26px;font-weight:500;color:var(--gold-soft);text-align:right;font-variant-numeric:tabular-nums}
+  /* Panel escalado */
+  #presentation-app .panel{padding:36px 44px;min-height:0;background:var(--bg-card);border:1px solid var(--line-soft)}
+  #presentation-app .panel-title{font-size:13px;letter-spacing:.32em;margin-bottom:24px}
+
+  /* Big donut escalado */
+  #presentation-app .big-donut{height:420px;max-height:420px}
+  #presentation-app .big-donut canvas{height:400px !important;max-height:400px !important;max-width:400px !important}
+  #presentation-app .big-donut-value{font-size:96px}
+  #presentation-app .big-donut-value .unit{font-size:36px}
+  #presentation-app .big-donut-label{font-size:13px;letter-spacing:.36em;max-width:200px;margin-top:10px}
+  #presentation-app .big-donut-sub{font-size:14px;margin-top:8px}
+
+  /* Bar list escalada */
+  #presentation-app .bar-list{gap:20px}
+  #presentation-app .bar-list-item{grid-template-columns:240px 1fr 110px;gap:24px;padding:10px 0}
+  #presentation-app .bar-list-item .name{font-size:20px}
+  #presentation-app .bar-list-item .track{height:14px}
+  #presentation-app .bar-list-item .value{font-size:24px;font-weight:600}
 
   /* Lista de eventos (próx prazos, audiências, publicações, pendentes) */
   .pres-event-list{display:flex;flex-direction:column;gap:14px;flex:1;overflow:hidden}
@@ -1339,111 +1349,168 @@
   </header>
 
   <main class="pres-stage" id="presStage">
-    <!-- SLIDE 1: PANORAMA com sub-info -->
+    <!-- SLIDE 1: PANORAMA (4 KPI cards iguais dashboard) -->
     <div class="pres-slide active" data-slide="1">
       <div class="pres-eyebrow">Felipe Ramos Advogados · Panorama Operacional</div>
       <h1 class="pres-title">Resumo do Dia</h1>
-      <div class="pres-grid-4">
-        <div class="pres-kpi"><div><div class="pres-kpi-label">Prazos no Horizonte</div></div><div class="pres-kpi-num gold" id="presKpi1">—</div><div class="pres-kpi-sub" id="presKpi1Sub">—</div></div>
-        <div class="pres-kpi"><div><div class="pres-kpi-label">Tarefas Ativas</div></div><div class="pres-kpi-num" id="presKpi2">—</div><div class="pres-kpi-sub" id="presKpi2Sub">—</div></div>
-        <div class="pres-kpi"><div><div class="pres-kpi-label">Audiências Agendadas</div></div><div class="pres-kpi-num gold" id="presKpi3">—</div><div class="pres-kpi-sub" id="presKpi3Sub">—</div></div>
-        <div class="pres-kpi"><div><div class="pres-kpi-label">Publicações a Tratar</div></div><div class="pres-kpi-num warn" id="presKpi4">—</div><div class="pres-kpi-sub" id="presKpi4Sub">—</div></div>
+      <div class="kpi-grid grid-cols-4" style="flex:1">
+        <div class="kpi">
+          <div class="kpi-head">
+            <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+            <div class="kpi-label">Prazos no Horizonte</div>
+          </div>
+          <div class="kpi-mid"><div class="kpi-num gold" id="presKpi1">—</div></div>
+          <div class="kpi-foot"><div class="kpi-sub" id="presKpi1Sub">—</div><canvas class="kpi-spark" data-spark="18,19,20,21,21,21,21" data-color="gold"></canvas></div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-head">
+            <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+            <div class="kpi-label">Tarefas Ativas</div>
+          </div>
+          <div class="kpi-mid"><div class="kpi-num" id="presKpi2">—</div></div>
+          <div class="kpi-foot"><div class="kpi-sub" id="presKpi2Sub">—</div><canvas class="kpi-spark" data-spark="14,16,15,17,16,17,18" data-color="gold"></canvas></div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-head">
+            <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+            <div class="kpi-label">Audiências Agendadas</div>
+          </div>
+          <div class="kpi-mid"><div class="kpi-num gold" id="presKpi3">—</div></div>
+          <div class="kpi-foot"><div class="kpi-sub" id="presKpi3Sub">—</div><canvas class="kpi-spark" data-spark="3,4,4,5,5,5,5" data-color="gold"></canvas></div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-head">
+            <div class="kpi-icon icon-warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div>
+            <div class="kpi-label">Publicações a Tratar</div>
+          </div>
+          <div class="kpi-mid"><div class="kpi-num warn" id="presKpi4">—</div></div>
+          <div class="kpi-foot"><div class="kpi-sub" id="presKpi4Sub">—</div><canvas class="kpi-spark" data-spark="8,7,6,5,4,5,5" data-color="warn"></canvas></div>
+        </div>
       </div>
     </div>
 
-    <!-- SLIDE 2: TAXA CUMPRIMENTO + lista próximos prazos -->
+    <!-- SLIDE 2: Donut Cumprimento + bar list próximos prazos -->
     <div class="pres-slide" data-slide="2">
       <div class="pres-eyebrow">Prazos Processuais</div>
       <h1 class="pres-title">Taxa de Cumprimento</h1>
-      <div class="pres-grid-2">
-        <div class="pres-donut-wrap" style="position:relative">
-          <canvas id="presDonut1"></canvas>
-          <div class="pres-donut-overlay">
-            <div class="pres-donut-value" id="presDonut1Val">—<span class="unit">%</span></div>
-            <div class="pres-donut-label">Cumpridos</div>
-            <div style="font-size:13px;color:var(--text-mute);margin-top:8px;letter-spacing:.06em"><span id="presDonut1Detail">—</span></div>
+      <div class="panels-grid grid-cols-2">
+        <div class="panel">
+          <div class="panel-title">Taxa de Cumprimento</div>
+          <div class="big-donut">
+            <canvas id="presDonut1"></canvas>
+            <div class="big-donut-center">
+              <div class="big-donut-value" id="presDonut1Val">—<span class="unit">%</span></div>
+              <div class="big-donut-label">Cumpridos</div>
+              <div class="big-donut-sub" id="presDonut1Detail">—</div>
+            </div>
           </div>
         </div>
-        <div class="pres-side-stat">
-          <div class="pres-kpi-label" style="margin-bottom:18px">Próximos prazos a cumprir</div>
-          <div class="pres-event-list" id="presNextPrazos"></div>
+        <div class="panel">
+          <div class="panel-title">Próximos prazos a cumprir</div>
+          <div class="bar-list" id="presNextPrazos" style="margin-top:8px"></div>
         </div>
       </div>
     </div>
 
-    <!-- SLIDE 3: TAREFAS POR RESP com split feitas/pendentes -->
+    <!-- SLIDE 3: Tarefas por Resp (bar-list) -->
     <div class="pres-slide" data-slide="3">
       <div class="pres-eyebrow">Distribuição de Trabalho</div>
       <h1 class="pres-title">Tarefas por Responsável</h1>
-      <div class="pres-bar-list" id="presBarList1" style="flex:1;justify-content:center"></div>
+      <div class="panel" style="flex:1;display:flex;flex-direction:column;justify-content:center">
+        <div class="panel-title">Feitas / Pendentes por executor</div>
+        <div class="bar-list" id="presBarList1"></div>
+      </div>
     </div>
 
-    <!-- SLIDE 4: PRÓXIMAS 3 AUDIÊNCIAS -->
+    <!-- SLIDE 4: Próximas Audiências (bar-list custom) -->
     <div class="pres-slide" data-slide="4">
       <div class="pres-eyebrow">Calendário</div>
       <h1 class="pres-title">Próximas Audiências</h1>
-      <div class="pres-event-list pres-events-big" id="presNextAudiencias"></div>
+      <div class="panel" style="flex:1;display:flex;flex-direction:column;justify-content:center">
+        <div class="panel-title">Próximas 3 audiências agendadas</div>
+        <div class="bar-list" id="presNextAudiencias"></div>
+      </div>
     </div>
 
-    <!-- SLIDE 5: APROVEITAMENTO + captadas + score -->
+    <!-- SLIDE 5: Aproveitamento (bar-list com aprov + captadas + score) -->
     <div class="pres-slide" data-slide="5">
       <div class="pres-eyebrow">Produtividade</div>
       <h1 class="pres-title">Aproveitamento da Equipe</h1>
-      <div class="pres-bar-list" id="presBarList2" style="flex:1;justify-content:center"></div>
+      <div class="panel" style="flex:1;display:flex;flex-direction:column;justify-content:center">
+        <div class="panel-title">Aproveitamento WM · Captadas · Score</div>
+        <div class="bar-list" id="presBarList2"></div>
+      </div>
     </div>
 
-    <!-- SLIDE 6: STATUS + lista de pendentes críticas -->
+    <!-- SLIDE 6: Status Tarefas + lista pendentes -->
     <div class="pres-slide" data-slide="6">
       <div class="pres-eyebrow">Tarefas em Acompanhamento</div>
       <h1 class="pres-title">Status Geral</h1>
-      <div class="pres-grid-2">
-        <div class="pres-donut-wrap" style="position:relative">
-          <canvas id="presDonut2"></canvas>
-          <div class="pres-donut-overlay">
-            <div class="pres-donut-value ok" id="presDonut2Val">—<span class="unit">%</span></div>
-            <div class="pres-donut-label">Feitas</div>
-            <div style="font-size:13px;color:var(--text-mute);margin-top:8px;letter-spacing:.06em"><span id="presFeitasVal">—</span> feitas · <span id="presPendentesVal">—</span> pendentes · <span id="presTotalVal">—</span> total</div>
+      <div class="panels-grid grid-cols-2">
+        <div class="panel">
+          <div class="panel-title">Status de Conclusão</div>
+          <div class="big-donut">
+            <canvas id="presDonut2"></canvas>
+            <div class="big-donut-center">
+              <div class="big-donut-value ok" id="presDonut2Val">—<span class="unit">%</span></div>
+              <div class="big-donut-label">Feitas</div>
+              <div class="big-donut-sub"><span id="presFeitasVal">—</span> feitas · <span id="presPendentesVal">—</span> pendentes</div>
+            </div>
           </div>
         </div>
-        <div class="pres-side-stat">
-          <div class="pres-kpi-label" style="margin-bottom:18px">Tarefas pendentes</div>
-          <div class="pres-event-list" id="presPendentesList"></div>
+        <div class="panel">
+          <div class="panel-title">Tarefas pendentes mais próximas</div>
+          <div class="bar-list" id="presPendentesList" style="margin-top:8px"></div>
         </div>
       </div>
     </div>
 
-    <!-- SLIDE 7 (NOVO): PUBLICAÇÕES PENDENTES -->
+    <!-- SLIDE 7: Publicações Pendentes (bar-list) -->
     <div class="pres-slide" data-slide="7">
       <div class="pres-eyebrow">Movimentação Processual</div>
       <h1 class="pres-title">Publicações a Tratar</h1>
-      <div class="pres-event-list" id="presPublicacoesList" style="flex:1;justify-content:center"></div>
+      <div class="panel" style="flex:1;display:flex;flex-direction:column;justify-content:center">
+        <div class="panel-title">Publicações aguardando tratamento</div>
+        <div class="bar-list" id="presPublicacoesList"></div>
+      </div>
     </div>
 
-    <!-- SLIDE 8 (NOVO): COLABORADOR DESTAQUE -->
+    <!-- SLIDE 8: Colaborador Destaque (kpi cards) -->
     <div class="pres-slide" data-slide="8">
       <div class="pres-eyebrow">Performance Individual</div>
       <h1 class="pres-title">Colaborador Destaque</h1>
-      <div class="pres-highlight">
+      <div class="panel" style="display:flex;gap:36px;align-items:center;padding:36px 44px;margin-bottom:24px">
         <div class="pres-avatar" id="presTopAvatar">??</div>
-        <div class="pres-highlight-info">
-          <div class="pres-highlight-name" id="presTopNome">—</div>
-          <div class="pres-highlight-func" id="presTopFuncao">—</div>
-          <div class="pres-highlight-stats">
-            <div class="pres-h-stat">
-              <div class="pres-h-stat-num gold" id="presTopAprov">—<span class="unit">%</span></div>
-              <div class="pres-h-stat-label">Aproveitamento</div>
-            </div>
-            <div class="pres-h-sep"></div>
-            <div class="pres-h-stat">
-              <div class="pres-h-stat-num ok" id="presTopScore">—</div>
-              <div class="pres-h-stat-label">Score GenIA</div>
-            </div>
-            <div class="pres-h-sep"></div>
-            <div class="pres-h-stat">
-              <div class="pres-h-stat-num" id="presTopCaptadas">—<span class="unit">h</span></div>
-              <div class="pres-h-stat-label">Captadas</div>
-            </div>
+        <div style="flex:1">
+          <div class="eyebrow" style="color:var(--gold);font-size:11px;letter-spacing:.36em">Top performer do dia</div>
+          <div style="font-size:48px;font-weight:300;color:var(--text);letter-spacing:-.02em;margin-top:6px" id="presTopNome">—</div>
+          <div style="font-size:16px;color:var(--gold-soft);font-weight:600;letter-spacing:.12em;text-transform:uppercase;margin-top:8px" id="presTopFuncao">—</div>
+        </div>
+      </div>
+      <div class="kpi-grid grid-cols-3" style="flex:1">
+        <div class="kpi">
+          <div class="kpi-head">
+            <div class="kpi-icon icon-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="kpi-label">Aproveitamento</div>
           </div>
+          <div class="kpi-mid"><div class="kpi-num gold" id="presTopAprov">—<span class="unit">%</span></div></div>
+          <div class="kpi-foot"><div class="kpi-sub">% do tempo produtivo</div><canvas class="kpi-spark" data-spark="35,40,42,45,46,48,48" data-color="ok"></canvas></div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-head">
+            <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+            <div class="kpi-label">Score GenIA</div>
+          </div>
+          <div class="kpi-mid"><div class="kpi-num ok" id="presTopScore">—</div></div>
+          <div class="kpi-foot"><div class="kpi-sub">índice geral de produtividade</div><canvas class="kpi-spark" data-spark="40,42,44,45,46,48,48" data-color="gold"></canvas></div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-head">
+            <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+            <div class="kpi-label">Horas Captadas</div>
+          </div>
+          <div class="kpi-mid"><div class="kpi-num gold" id="presTopCaptadas">—<span class="unit">h</span></div></div>
+          <div class="kpi-foot"><div class="kpi-sub">jornada registrada hoje</div><canvas class="kpi-spark" data-spark="3,4,4,5,5,5,5" data-color="gold"></canvas></div>
         </div>
       </div>
     </div>
@@ -2144,15 +2211,13 @@ function populatePresentationData() {
     .slice(0, 5);
   document.getElementById('presNextPrazos').innerHTML = proxPrazos.map(p => {
     const isUrgent = (p.status||'').toLowerCase().includes('3 dias');
-    return `<div class="pres-event-row">
-      <div class="pe-date">${p.data}<div style="font-size:11px;color:var(--text-mute);font-weight:400">${p.dia}</div></div>
-      <div class="pe-info">
-        <div class="pe-title">${p.titulo}</div>
-        <div class="pe-sub">${p.processo}</div>
-      </div>
-      <div class="pe-tag" style="color:${isUrgent ? 'var(--danger)' : 'var(--gold)'};border-color:${isUrgent ? 'var(--danger)' : 'var(--gold)'}">${isUrgent ? '3 dias' : 'A concluir'}</div>
+    const cls = isUrgent ? 'danger' : '';
+    return `<div class="bar-list-item">
+      <div class="name">${p.data} · ${p.titulo}</div>
+      <div class="track"><div class="fill ${cls}" style="width:${isUrgent ? '85%' : '50%'}"></div></div>
+      <div class="value ${cls}">${isUrgent ? '3 dias' : 'A concluir'}</div>
     </div>`;
-  }).join('') || '<div class="pe-sub">Nenhum prazo pendente</div>';
+  }).join('') || '<div style="color:var(--text-mute);text-align:center;padding:24px">Nenhum prazo pendente</div>';
 
   // ===== Slide 3: Tarefas por Responsável com split feitas/pendentes =====
   const respMap = {};
@@ -2166,14 +2231,14 @@ function populatePresentationData() {
   document.getElementById('presBarList1').innerHTML = respSorted.map(([nome, c]) => {
     const pctFeitas = c.total > 0 ? (c.feitas/c.total*100) : 0;
     const widthTotal = (c.total/maxResp*100);
-    return `<div class="pres-bar-item">
+    return `<div class="bar-list-item">
       <div class="name">${nome}</div>
       <div class="track" style="position:relative">
         <div class="fill" style="width:${widthTotal}%;background:linear-gradient(90deg,${OK} 0%,${OK} ${pctFeitas}%,${WARN} ${pctFeitas}%,${WARN} 100%)"></div>
       </div>
-      <div class="value" style="font-size:20px">
+      <div class="value">
         <span style="color:${OK}">${c.feitas}</span>
-        <span style="color:var(--text-faint);font-size:18px">/</span>
+        <span style="color:var(--text-faint)">/</span>
         <span style="color:${WARN}">${c.pendentes}</span>
       </div>
     </div>`;
@@ -2181,28 +2246,25 @@ function populatePresentationData() {
 
   // ===== Slide 4: Próximas 3 Audiências =====
   document.getElementById('presNextAudiencias').innerHTML = audSorted.slice(0, 3).map(a => `
-    <div class="pres-event-row">
-      <div class="pe-date">${a.data}<div style="font-size:13px;color:var(--text-mute);font-weight:400">${a.dia}</div></div>
-      <div class="pe-info">
-        <div class="pe-title">${a.tipo}</div>
-        <div class="pe-sub">${a.processo}</div>
-      </div>
-      <div class="pe-tag">${a.hora}</div>
+    <div class="bar-list-item">
+      <div class="name">${a.data} ${a.dia} · ${a.tipo}</div>
+      <div class="track"><div class="fill" style="width:60%"></div></div>
+      <div class="value" style="color:var(--gold)">${a.hora}</div>
     </div>
-  `).join('') || '<div class="pe-sub">Sem audiências agendadas</div>';
+  `).join('') || '<div style="color:var(--text-mute);text-align:center;padding:24px">Sem audiências agendadas</div>';
 
   // ===== Slide 5: Aproveitamento com captadas + score =====
   const wmAtivos = workmonitor.filter(w => w.aprov > 0).sort((a,b) => b.aprov - a.aprov);
   const maxAprov = Math.max(...wmAtivos.map(w => w.aprov), 1);
   document.getElementById('presBarList2').innerHTML = wmAtivos.map(w => {
     const cls = w.aprov >= 50 ? 'ok' : w.aprov >= 25 ? '' : 'warn';
-    return `<div class="pres-bar-item" style="grid-template-columns:240px 1fr auto">
+    return `<div class="bar-list-item" style="grid-template-columns:240px 1fr auto">
       <div class="name">${w.nome}</div>
       <div class="track"><div class="fill ${cls}" style="width:${(w.aprov/maxAprov)*100}%"></div></div>
-      <div class="value" style="display:flex;gap:18px;align-items:baseline;font-size:18px">
-        <span style="color:var(--gold-soft);min-width:60px;text-align:right">${w.aprov.toFixed(0)}%</span>
-        <span style="color:var(--text-mute);font-size:13px;font-weight:500">${w.captadas.toFixed(2).replace('.',',')}h</span>
-        <span style="color:var(--ok);font-size:15px;min-width:55px;text-align:right">${w.score.toFixed(1).replace('.',',')}</span>
+      <div class="value" style="display:flex;gap:18px;align-items:baseline">
+        <span style="color:var(--gold-soft);min-width:70px;text-align:right;font-size:22px">${w.aprov.toFixed(0)}%</span>
+        <span style="color:var(--text-mute);font-size:15px;font-weight:500;min-width:60px;text-align:right">${w.captadas.toFixed(2).replace('.',',')}h</span>
+        <span style="color:var(--ok);font-size:18px;min-width:60px;text-align:right">${w.score.toFixed(1).replace('.',',')}</span>
       </div>
     </div>`;
   }).join('');
@@ -2229,28 +2291,22 @@ function populatePresentationData() {
     .sort((a,b) => parseDataKey(a.pf) - parseDataKey(b.pf))
     .slice(0, 5);
   document.getElementById('presPendentesList').innerHTML = pendentesList.map(t => `
-    <div class="pres-event-row">
-      <div class="pe-date">${t.pf || '—'}<div style="font-size:11px;color:var(--text-mute);font-weight:400">${t.resp}</div></div>
-      <div class="pe-info">
-        <div class="pe-title">${t.titulo}</div>
-        <div class="pe-sub">${t.obs || ''}</div>
-      </div>
-      <div class="pe-tag" style="color:var(--warn);border-color:var(--warn)">Pendente</div>
+    <div class="bar-list-item">
+      <div class="name">${t.pf || '—'} · ${t.titulo}</div>
+      <div class="track"><div class="fill warn" style="width:60%"></div></div>
+      <div class="value warn">${t.resp}</div>
     </div>
-  `).join('') || '<div class="pe-sub">Nenhuma tarefa pendente 🎉</div>';
+  `).join('') || '<div style="color:var(--text-mute);text-align:center;padding:24px">Nenhuma tarefa pendente 🎉</div>';
 
   // ===== Slide 7 (NOVO): Publicações Pendentes =====
   const pubsPendentes = publicacoes.filter(p => p.status === 'pendente').slice(0, 6);
   document.getElementById('presPublicacoesList').innerHTML = pubsPendentes.map(p => `
-    <div class="pres-event-row">
-      <div class="pe-date">${p.data}</div>
-      <div class="pe-info">
-        <div class="pe-title">${p.processo}</div>
-        <div class="pe-sub">Responsável: ${p.resp}</div>
-      </div>
-      <div class="pe-tag" style="color:var(--danger);border-color:var(--danger)">Aguardando</div>
+    <div class="bar-list-item">
+      <div class="name">${p.data} · ${p.processo}</div>
+      <div class="track"><div class="fill danger" style="width:70%"></div></div>
+      <div class="value danger">${p.resp}</div>
     </div>
-  `).join('') || '<div class="pe-sub">Nenhuma publicação pendente 🎉</div>';
+  `).join('') || '<div style="color:var(--text-mute);text-align:center;padding:24px">Nenhuma publicação pendente 🎉</div>';
 
   // ===== Slide 8 (NOVO): Colaborador Destaque =====
   const topPerformer = [...workmonitor].sort((a,b) => b.score - a.score)[0];
@@ -2264,6 +2320,11 @@ function populatePresentationData() {
     document.getElementById('presTopAprov').innerHTML = topPerformer.aprov.toFixed(0) + '<span class="unit">%</span>';
     document.getElementById('presTopScore').textContent = topPerformer.score.toFixed(2).replace('.',',');
     document.getElementById('presTopCaptadas').innerHTML = topPerformer.captadas.toFixed(2).replace('.',',') + '<span class="unit">h</span>';
+  }
+
+  // Desenha sparklines dos KPIs (mesmo sistema do dashboard)
+  if (typeof drawSparklines === 'function') {
+    drawSparklines(document.getElementById('presentation-app'));
   }
 }
 
