@@ -316,19 +316,21 @@
   #presentation-app .panels-grid.grid-cols-2{grid-template-columns:1fr 1fr}
   #presentation-app .panels-grid.grid-cols-3{grid-template-columns:1fr 1fr 1fr}
 
-  /* KPI Card escalado pra apresentação */
-  #presentation-app .kpi{min-height:260px;height:260px;padding:28px;background:var(--bg-card);border:1px solid var(--line-soft);gap:14px;justify-content:space-between}
-  #presentation-app .kpi::before{width:80px;height:2px}
-  #presentation-app .kpi-head{gap:16px}
-  #presentation-app .kpi-icon{width:52px;height:52px;border-radius:10px}
-  #presentation-app .kpi-icon svg{width:26px;height:26px}
-  #presentation-app .kpi-label{font-size:12px;letter-spacing:.28em;line-height:1.4}
+  /* KPI Card escalado pra apresentação · estica pra preencher altura disponível */
+  #presentation-app .kpi-grid{align-items:stretch}
+  #presentation-app .kpi{min-height:0;height:100%;padding:36px 40px;background:var(--bg-card);border:1px solid var(--line-soft);gap:18px;justify-content:space-between;display:flex;flex-direction:column}
+  #presentation-app .kpi::before{width:100px;height:3px}
+  #presentation-app .kpi-head{gap:20px;align-items:center}
+  #presentation-app .kpi-icon{width:64px;height:64px;border-radius:12px;flex-shrink:0}
+  #presentation-app .kpi-icon svg{width:32px;height:32px}
+  #presentation-app .kpi-label{font-size:14px;letter-spacing:.3em;line-height:1.4}
   #presentation-app .kpi-mid{flex:1;display:flex;align-items:center;justify-content:flex-start}
-  #presentation-app .kpi-num{font-size:72px;line-height:.95;font-weight:200}
-  #presentation-app .kpi-num .unit{font-size:28px}
-  #presentation-app .kpi-foot{height:96px;flex:0 0 96px;gap:8px}
-  #presentation-app .kpi-spark{height:50px !important;max-height:50px !important;min-height:50px !important;flex:0 0 50px;opacity:1}
-  #presentation-app .kpi-sub{font-size:12px;line-height:1.4;max-height:36px}
+  #presentation-app .kpi-num{font-size:120px;line-height:.9;font-weight:200;letter-spacing:-.02em}
+  #presentation-app .kpi-num .unit{font-size:40px}
+  #presentation-app .kpi-foot{height:auto;flex:0 0 auto;gap:12px;padding-top:8px;border-top:1px solid var(--line-soft);display:flex;flex-direction:column}
+  #presentation-app .kpi-spark{height:60px !important;max-height:60px !important;min-height:60px !important;flex:0 0 60px;opacity:1;width:100% !important}
+  #presentation-app .kpi-sub{font-size:14px;line-height:1.5;max-height:none}
+  #presentation-app .kpi-sub strong{font-size:16px}
 
   /* Panel escalado */
   #presentation-app .panel{padding:36px 44px;min-height:0;background:var(--bg-card);border:1px solid var(--line-soft)}
@@ -2091,8 +2093,8 @@ function enterPresentation() {
   // pede fullscreen
   const elem = document.documentElement;
   if (elem.requestFullscreen) elem.requestFullscreen().catch(()=>{});
-  // popula dados
-  populatePresentationData();
+  // popula dados (try/catch pra não bloquear loop se algum elemento faltar)
+  try { populatePresentationData(); } catch (e) { console.error('[PULSE] populate erro:', e); }
   // clock
   updatePresClock();
   presClockTimer = setInterval(updatePresClock, 1000);
@@ -2107,7 +2109,7 @@ function enterPresentation() {
   // auto-refresh
   presRefreshTimer = setInterval(async () => {
     if (typeof loadFromSheets === 'function' && await loadFromSheets()) {
-      populatePresentationData();
+      try { populatePresentationData(); } catch (e) { console.error('[PULSE] populate erro:', e); }
     }
   }, PRES_REFRESH_MINUTES * 60 * 1000);
 }
@@ -2321,7 +2323,6 @@ function populatePresentationData() {
   document.getElementById('presDonut2Val').innerHTML = pctFeitas2 + '<span class="unit">%</span>';
   document.getElementById('presFeitasVal').textContent = tarFeitas;
   document.getElementById('presPendentesVal').textContent = tarPendentes;
-  document.getElementById('presTotalVal').textContent = totalP;
   const d2 = document.getElementById('presDonut2');
   if (d2) {
     if (presDonut2Chart) presDonut2Chart.destroy();
