@@ -408,10 +408,8 @@
     display:flex;align-items:center;justify-content:space-between;
     border-top:1px solid var(--line);background:#0c0c0c;
   }
-  .pres-counter{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--text-mute);font-weight:700}
+  .pres-counter{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--text-mute);font-weight:700;flex:1}
   .pres-counter strong{color:var(--gold);font-size:14px}
-  .pres-progress{flex:1;margin:0 32px;height:3px;background:#1a1a1a;position:relative}
-  .pres-progress-bar{position:absolute;top:0;left:0;bottom:0;background:var(--gold);width:0%;transition:width .25s linear}
   .pres-hint{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--text-faint);font-weight:600}
 
   /* Botão Exit no header */
@@ -1528,8 +1526,7 @@
 
   <footer class="pres-footer">
     <div class="pres-counter">Slide <strong id="presCounter">1</strong> / <strong id="presTotal">6</strong></div>
-    <div class="pres-progress"><div class="pres-progress-bar" id="presProgressBar"></div></div>
-    <div class="pres-hint" id="presLoopInfo">Loop · 12s por slide</div>
+    <div class="pres-hint" id="presLoopInfo">Loop · 15s por slide</div>
   </footer>
 </div>
 
@@ -2086,7 +2083,7 @@ function initMaster() {
 }
 
 // ====== MODO APRESENTAÇÃO ======
-const PRES_SLIDE_SECONDS = 12;       // tempo por slide
+const PRES_SLIDE_SECONDS = 15;       // tempo por slide
 const PRES_REFRESH_MINUTES = 5;      // recarrega dados a cada 5min
 const PRES_SLIDES_COUNT = 6;
 let presSlideIdx = 0;
@@ -2153,22 +2150,9 @@ function showPresSlide(idx) {
   }, 250);
 }
 
-// Barra de progresso = transição CSS sincronizada com o setInterval do slide.
-// (Antes era um setInterval JS independente que driftava com o tempo.)
-function startPresProgress() { /* no-op · disparada por resetPresProgress em showPresSlide */ }
-
-function resetPresProgress() {
-  const bar = document.getElementById('presProgressBar');
-  if (!bar) return;
-  // Zera instantaneamente
-  bar.style.transition = 'none';
-  bar.style.width = '0%';
-  // Força reflow pra próxima transição entrar em vigor
-  void bar.offsetWidth;
-  // Anima até 100% pelo tempo exato do slide · sincronizado com setInterval(PRES_SLIDE_SECONDS*1000)
-  bar.style.transition = 'width ' + PRES_SLIDE_SECONDS + 's linear';
-  bar.style.width = '100%';
-}
+// Barra de progresso removida · slides trocam só pelo setInterval
+function startPresProgress() { /* no-op */ }
+function resetPresProgress() { /* no-op */ }
 
 function updatePresClock() {
   const now = new Date();
