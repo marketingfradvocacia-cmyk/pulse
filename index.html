@@ -1,0 +1,2122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PULSE · Felipe Ramos Advogados</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-page:#0a0a0a;
+    --bg-card:#141414;
+    --bg-card-2:#1a1a1a;
+    --bg-sidebar:#0c0c0c;
+    --bg-row:#181818;
+    --gold:#aa843d;
+    --gold-soft:#c9a961;
+    --gold-deep:#7a5e2b;
+    --gold-glow:rgba(170,132,61,.15);
+    --text:#e6e4e9;
+    --text-mute:#8a8a8a;
+    --text-faint:#5a5a5a;
+    --line:rgba(170,132,61,.2);
+    --line-soft:#242424;
+    --ok:#7ba776;
+    --warn:#c9a961;
+    --danger:#b8615a;
+    --info:#7a8fa6;
+    --sidebar-w:260px;
+  }
+  *{font-family:'Montserrat','Segoe UI',system-ui,sans-serif;font-weight:400;box-sizing:border-box}
+  html,body{background:var(--bg-page);color:var(--text);min-height:100vh;margin:0}
+
+  /* ============ LOGIN ============ */
+  #login-screen{
+    position:fixed;inset:0;z-index:1000;
+    background:radial-gradient(ellipse at center,rgba(170,132,61,.08) 0%,transparent 60%),var(--bg-page);
+    display:flex;align-items:center;justify-content:center;padding:40px;
+  }
+  #login-screen::before,#login-screen::after{
+    content:'';position:absolute;left:0;right:0;height:1px;
+    background:linear-gradient(90deg,transparent 0%,var(--gold) 50%,transparent 100%);
+  }
+  #login-screen::before{top:0} #login-screen::after{bottom:0}
+  .login-card{width:100%;max-width:420px;background:var(--bg-card);border:1px solid var(--line-soft);padding:60px 50px;position:relative}
+  .login-card::before{content:'';position:absolute;top:0;left:0;width:60px;height:1px;background:var(--gold)}
+  .login-logo{display:flex;justify-content:center;margin-bottom:32px}
+  /* Faz o preto da PNG virar transparente sobre fundos escuros */
+  .login-logo img,.sb-brand img,.header-logo img{mix-blend-mode:screen}
+  .login-title{font-weight:300;letter-spacing:.32em;text-transform:uppercase;font-size:24px;text-align:center;color:var(--gold-soft);margin-bottom:6px}
+  .login-sub{font-size:9px;letter-spacing:.36em;text-transform:uppercase;color:var(--text-faint);text-align:center;font-weight:600;margin-bottom:48px}
+  .login-field{margin-bottom:24px}
+  .login-label{font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:var(--text-faint);font-weight:700;display:block;margin-bottom:8px}
+  .login-input{width:100%;background:transparent;border:none;border-bottom:1px solid var(--line-soft);padding:8px 0;color:var(--text);font-size:14px;font-weight:400;letter-spacing:.02em;outline:none;transition:border-color .25s}
+  .login-input:focus{border-bottom-color:var(--gold)}
+  .login-input::placeholder{color:var(--text-faint);font-weight:300}
+  .login-error{color:var(--danger);font-size:11px;letter-spacing:.08em;text-align:center;min-height:18px;margin-bottom:12px;font-weight:500}
+  .login-remember{display:flex;align-items:center;gap:10px;margin-bottom:24px;cursor:pointer;user-select:none}
+  .login-remember input{position:absolute;opacity:0;pointer-events:none}
+  .login-remember .checkbox{
+    width:16px;height:16px;border:1px solid var(--line-soft);background:transparent;
+    display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;
+  }
+  .login-remember:hover .checkbox{border-color:var(--gold-deep)}
+  .login-remember input:checked + .checkbox{background:var(--gold);border-color:var(--gold)}
+  .login-remember input:checked + .checkbox::after{
+    content:'';width:8px;height:5px;border-left:1.5px solid #0a0a0a;border-bottom:1.5px solid #0a0a0a;
+    transform:rotate(-45deg) translateY(-1px);
+  }
+  .login-remember .label-txt{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-mute);font-weight:600}
+  .login-remember:hover .label-txt{color:var(--text)}
+  .login-btn{width:100%;background:var(--gold);color:#0a0a0a;border:none;padding:14px 0;font-weight:700;font-size:11px;letter-spacing:.32em;text-transform:uppercase;cursor:pointer;transition:all .25s}
+  .login-btn:hover{background:var(--gold-soft)}
+  .login-footer{margin-top:32px;text-align:center;color:var(--text-faint);font-size:9px;letter-spacing:.26em;text-transform:uppercase;font-weight:600}
+
+  /* ============ SIDEBAR ============ */
+  .sidebar{
+    position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);
+    background:var(--bg-sidebar);
+    border-right:1px solid var(--line);
+    display:flex;flex-direction:column;z-index:50;overflow-y:auto;
+  }
+  .sidebar::after{content:'';position:absolute;top:0;bottom:0;right:-1px;width:1px;background:linear-gradient(180deg,transparent 0%,var(--gold) 50%,transparent 100%)}
+  .sb-brand{padding:32px 28px 24px;text-align:center;border-bottom:1px solid var(--line-soft)}
+  .sb-brand img{margin:0 auto 18px;display:block;width:104px;height:auto}
+  .sb-brand .title{font-weight:300;letter-spacing:.32em;text-transform:uppercase;font-size:18px;color:var(--gold-soft)}
+  .sb-brand .sub{font-size:8px;letter-spacing:.32em;text-transform:uppercase;color:var(--text-faint);font-weight:600;margin-top:6px}
+  .sb-user{padding:20px 24px;border-bottom:1px solid var(--line-soft);display:flex;align-items:center;gap:12px}
+  .sb-user-avatar{width:36px;height:36px;border-radius:50%;background:var(--gold-glow);border:1px solid var(--gold-deep);display:flex;align-items:center;justify-content:center;color:var(--gold);font-weight:700;font-size:13px;letter-spacing:.05em;flex-shrink:0}
+  .sb-user-info{min-width:0;flex:1}
+  .sb-user-info .role{font-size:8px;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:2px}
+  .sb-user-info .name{font-size:12px;color:var(--text);font-weight:500;letter-spacing:.02em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sb-nav{padding:16px 0;flex:1}
+  .sb-nav-label{font-size:8px;letter-spacing:.32em;text-transform:uppercase;color:var(--text-faint);font-weight:700;padding:12px 28px 8px}
+  .sb-tab{
+    display:flex;align-items:center;gap:14px;padding:12px 28px;
+    color:var(--text-mute);font-size:12px;font-weight:500;letter-spacing:.06em;
+    cursor:pointer;transition:all .2s;border-left:2px solid transparent;
+  }
+  .sb-tab:hover{color:var(--text);background:rgba(170,132,61,.03)}
+  .sb-tab.active{color:var(--gold-soft);background:rgba(170,132,61,.06);border-left-color:var(--gold)}
+  .sb-tab .icon{width:16px;height:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .sb-tab .icon svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.5}
+  .sb-filter{padding:16px 28px;border-top:1px solid var(--line-soft);background:#080808}
+  .sb-filter-label{font-size:8px;letter-spacing:.32em;text-transform:uppercase;color:var(--text-faint);font-weight:700;margin-bottom:10px}
+  .sb-filter-pill{display:inline-block;padding:5px 10px;border:1px solid var(--line-soft);color:var(--text-mute);font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;margin-right:4px;margin-bottom:6px;cursor:pointer;transition:all .2s}
+  .sb-filter-pill.active{border-color:var(--gold);color:var(--gold-soft);background:var(--gold-glow)}
+  /* ====== REFRESH SCHEDULE WIDGET ====== */
+  .sb-refresh{padding:14px 24px;border-top:1px solid var(--line-soft);background:#080808}
+  .sb-refresh-label{font-size:8px;letter-spacing:.32em;text-transform:uppercase;color:var(--text-faint);font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+  .sb-refresh-label .refresh-dot{width:6px;height:6px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok);animation:refresh-pulse 2s infinite ease-in-out}
+  @keyframes refresh-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.85)}}
+  .sb-refresh-times{display:flex;gap:6px;margin-bottom:8px}
+  .sb-refresh-time{flex:1;text-align:center;padding:6px 4px;border:1px solid var(--line-soft);font-size:11px;font-weight:600;color:var(--text-mute);letter-spacing:.04em;font-variant-numeric:tabular-nums;transition:all .25s}
+  .sb-refresh-time.done{color:var(--ok);border-color:rgba(123,167,118,.35);background:rgba(123,167,118,.05)}
+  .sb-refresh-time.next{color:var(--gold);border-color:var(--gold);background:var(--gold-glow);font-weight:700}
+  .sb-refresh-status{font-size:10px;color:var(--text-mute);letter-spacing:.02em;line-height:1.4}
+  .sb-refresh-status strong{color:var(--gold-soft);font-weight:600}
+
+  .sb-footer{padding:16px 24px;border-top:1px solid var(--line-soft)}
+  .sb-logout{
+    width:100%;background:transparent;border:1px solid var(--line-soft);color:var(--text-mute);
+    padding:10px 14px;font-size:9px;font-weight:700;letter-spacing:.32em;text-transform:uppercase;
+    cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:8px;
+  }
+  .sb-logout:hover{border-color:var(--gold);color:var(--gold)}
+  .sb-logout svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.5}
+
+  /* ============ VIEW TOGGLE (substitui login) ============ */
+  .sb-toggle{
+    width:100%;background:rgba(170,132,61,.05);border:1px solid var(--line);color:var(--text);
+    padding:14px 14px;font-family:'Montserrat',sans-serif;
+    cursor:pointer;transition:all .25s;display:flex;flex-direction:column;gap:6px;align-items:flex-start;
+  }
+  .sb-toggle:hover{border-color:var(--gold);background:rgba(170,132,61,.12)}
+  .sb-toggle .toggle-label{font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:var(--text-faint);font-weight:700}
+  .sb-toggle .toggle-current{font-size:13px;letter-spacing:.02em;color:var(--gold-soft);font-weight:600;display:flex;align-items:center;gap:8px;width:100%}
+  .sb-toggle .toggle-current .arrow{margin-left:auto;color:var(--gold);font-size:16px;transition:transform .3s}
+  .sb-toggle:hover .toggle-current .arrow{transform:rotate(180deg)}
+  .sb-toggle .toggle-next{font-size:10px;color:var(--text-mute);letter-spacing:.04em}
+
+  /* ============ MAIN CONTENT ============ */
+  .main{margin-left:var(--sidebar-w);min-height:100vh;background:var(--bg-page);position:relative}
+  .main::before{content:'';position:fixed;top:0;left:var(--sidebar-w);right:0;height:200px;background:radial-gradient(ellipse at top,rgba(170,132,61,.05) 0%,transparent 60%);pointer-events:none;z-index:0}
+  .main-header{padding:32px 48px 0;display:flex;justify-content:space-between;align-items:flex-end;position:relative;z-index:1}
+  .main-header .eyebrow{font-size:9px;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:8px}
+  .main-header h1{font-weight:300;font-size:32px;color:var(--text);letter-spacing:-.02em;margin:0}
+  .main-header .snapshot{text-align:right}
+  .main-header .snapshot .day{font-size:10px;letter-spacing:.3em;color:var(--gold);font-weight:700;text-transform:uppercase}
+  .main-header .snapshot .date{font-size:16px;color:var(--text);font-weight:400;letter-spacing:.01em;margin-top:6px}
+  .main-body{padding:24px 48px 48px;position:relative;z-index:1}
+  .gold-rule-bottom{height:1px;background:linear-gradient(90deg,var(--gold) 0%,transparent 30%);margin:20px 48px 0;position:relative;z-index:1}
+
+  /* ============ KPI CARD V3 (icon + sparkline + delta) ============ */
+  .kpi-grid{display:grid;gap:1px;background:#1a1a1a;margin-bottom:32px}
+  .kpi{
+    background:var(--bg-card);padding:24px;position:relative;
+    display:flex;flex-direction:column;gap:14px;min-height:170px;
+  }
+  .kpi::before{content:'';position:absolute;top:0;left:0;width:24px;height:1px;background:var(--gold)}
+  .kpi-head{display:flex;align-items:flex-start;gap:14px}
+  .kpi-icon{
+    width:42px;height:42px;border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+    background:var(--gold-glow);border:1px solid var(--gold-deep);
+    flex-shrink:0;
+  }
+  .kpi-icon svg{width:20px;height:20px;stroke:var(--gold-soft);fill:none;stroke-width:1.5}
+  .kpi-icon.icon-ok{background:rgba(123,167,118,.12);border-color:rgba(123,167,118,.4)}
+  .kpi-icon.icon-ok svg{stroke:var(--ok)}
+  .kpi-icon.icon-warn{background:rgba(201,169,97,.12);border-color:rgba(201,169,97,.4)}
+  .kpi-icon.icon-warn svg{stroke:var(--warn)}
+  .kpi-icon.icon-danger{background:rgba(184,97,90,.12);border-color:rgba(184,97,90,.4)}
+  .kpi-icon.icon-danger svg{stroke:var(--danger)}
+  .kpi-label{font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:var(--text-faint);font-weight:700;flex:1;line-height:1.5;padding-top:3px}
+  .kpi-mid{display:flex;align-items:baseline;gap:12px}
+  .kpi-num{font-size:42px;line-height:.9;font-weight:200;color:var(--text);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+  .kpi-num.gold{color:var(--gold-soft)}
+  .kpi-num.ok{color:var(--ok)}
+  .kpi-num.warn{color:var(--warn)}
+  .kpi-num.danger{color:var(--danger)}
+  .kpi-num .unit{font-size:18px;color:var(--text-mute);font-weight:300;letter-spacing:0;margin-left:2px}
+  .kpi-delta{font-size:10px;font-weight:700;letter-spacing:.06em;padding:3px 8px;border-radius:4px;display:inline-flex;align-items:center;gap:3px}
+  .kpi-delta.up{color:var(--ok);background:rgba(123,167,118,.12)}
+  .kpi-delta.down{color:var(--danger);background:rgba(184,97,90,.12)}
+  .kpi-delta.neutral{color:var(--text-mute);background:#1f1f1f}
+  .kpi-foot{display:flex;flex-direction:column;justify-content:flex-end;gap:8px;height:84px;flex-shrink:0;overflow:hidden;position:relative}
+  .kpi-spark{order:2;display:block !important;width:100% !important;height:38px !important;max-height:38px !important;min-height:38px !important;flex:0 0 38px;opacity:.85}
+  .kpi-sub{order:1;font-size:11px;color:var(--text-mute);font-weight:500;letter-spacing:.02em;text-align:center;line-height:1.4;padding:0 4px;font-style:italic;flex-shrink:0;max-height:34px;overflow:hidden}
+
+  /* ============ PANELS / CARDS GENERAL ============ */
+  .panels-grid{display:grid;gap:1px;background:#1a1a1a;margin-bottom:32px}
+  .panel{background:var(--bg-card);padding:24px 28px;position:relative;min-height:280px}
+  .panel-title{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+  .panel-title::before{content:'';width:3px;height:14px;background:var(--gold)}
+
+  /* ============ BIG DONUT GAUGE ============ */
+  .big-donut{position:relative;display:flex;align-items:center;justify-content:center;height:280px;max-height:280px;width:100%;overflow:hidden}
+  .big-donut canvas{max-height:260px !important;max-width:100% !important;height:260px !important}
+  .big-donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;text-align:center}
+  .big-donut-value{font-size:54px;font-weight:200;color:var(--gold-soft);letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}
+  .big-donut-value .unit{font-size:24px;color:var(--text-mute);font-weight:300;margin-left:2px}
+  .big-donut-label{font-size:9px;letter-spacing:.32em;text-transform:uppercase;color:var(--text-faint);font-weight:700;margin-top:10px;max-width:160px;line-height:1.4}
+  .big-donut-sub{font-size:10px;color:var(--text-mute);margin-top:6px;font-weight:400}
+
+  /* ============ BAR LIST (horizontal bars com nome+valor) ============ */
+  .bar-list{display:flex;flex-direction:column;gap:12px}
+  .bar-list-item{display:grid;grid-template-columns:160px 1fr 56px;align-items:center;gap:14px;padding:6px 0;cursor:default;transition:all .2s}
+  .bar-list-item:hover{padding-left:4px}
+  .bar-list-item .name{font-size:12px;color:var(--text);font-weight:500;letter-spacing:.02em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .bar-list-item .track{height:8px;background:#1f1f1f;border-radius:2px;position:relative;overflow:hidden}
+  .bar-list-item .fill{height:100%;background:linear-gradient(90deg,var(--gold-deep),var(--gold-soft));border-radius:2px;transition:width .6s ease-out}
+  .bar-list-item .fill.ok{background:linear-gradient(90deg,#4d6e4a,var(--ok))}
+  .bar-list-item .fill.warn{background:linear-gradient(90deg,#8b7440,var(--warn))}
+  .bar-list-item .fill.danger{background:linear-gradient(90deg,#7a3f3a,var(--danger))}
+  .bar-list-item .value{font-size:13px;font-weight:500;color:var(--gold-soft);letter-spacing:.02em;text-align:right;font-variant-numeric:tabular-nums}
+  .bar-list-item .value.ok{color:var(--ok)} .bar-list-item .value.warn{color:var(--warn)} .bar-list-item .value.danger{color:var(--danger)}
+
+  /* ============ TABLES (kept, but refined) ============ */
+  table{width:100%;border-collapse:collapse;font-size:12px}
+  th{text-align:left;padding:12px 14px;color:var(--text-faint);font-size:9px;letter-spacing:.22em;text-transform:uppercase;font-weight:700;border-bottom:1px solid var(--line);background:#101010;white-space:nowrap}
+  td{padding:12px 14px;color:var(--text);border-bottom:1px solid var(--line-soft);vertical-align:middle;font-weight:400}
+  tr:hover td{background:var(--bg-row)}
+  td.num-cell{font-size:13px;font-weight:500;color:var(--gold-soft);letter-spacing:.02em;font-variant-numeric:tabular-nums;white-space:nowrap}
+  td.mute{color:var(--text-mute);font-size:11px;font-weight:400}
+  /* Wrapper scrollavel pra tabelas largas */
+  .table-wrap{overflow-x:auto;max-width:100%}
+
+  /* ============ FILTER CHIPS + DROPDOWN ============ */
+  .filter-chip{
+    padding:6px 14px;background:transparent;border:1px solid var(--line-soft);color:var(--text-mute);
+    font-family:'Montserrat',sans-serif;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+    cursor:pointer;transition:all .25s;border-radius:999px;
+  }
+  .filter-chip:hover{border-color:var(--gold);color:var(--gold);background:rgba(170,132,61,.05)}
+  .filter-chip.active{border-color:var(--gold);color:var(--gold-soft);background:var(--gold-glow)}
+  .filter-label-mini{font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:var(--text-faint);font-weight:700}
+  .filter-select{
+    background:var(--bg-card);border:1px solid var(--line-soft);color:var(--text);
+    padding:6px 12px;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:600;
+    letter-spacing:.04em;cursor:pointer;border-radius:4px;
+  }
+  .filter-select:hover{border-color:var(--gold)}
+  .filter-select:focus{border-color:var(--gold);outline:none}
+  .prazos-filter-card{cursor:pointer;transition:all .25s}
+  .prazos-filter-card.filtered{border:1px solid var(--gold);box-shadow:0 0 0 1px var(--gold)}
+
+  /* ============ MODO TV ============ */
+  .tv-button{
+    position:fixed;top:18px;right:18px;z-index:200;
+    background:rgba(170,132,61,.1);border:1px solid var(--gold);color:var(--gold);
+    padding:9px 14px;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;
+    letter-spacing:.22em;text-transform:uppercase;cursor:pointer;transition:all .25s;
+    display:flex;align-items:center;gap:8px;
+  }
+  .tv-button:hover{background:var(--gold);color:#0a0a0a}
+  .tv-button svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.5}
+
+  .tv-exit{
+    position:fixed;top:18px;right:18px;z-index:1100;
+    background:rgba(184,97,90,.15);border:1px solid var(--danger);color:var(--danger);
+    padding:9px 14px;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;
+    letter-spacing:.22em;text-transform:uppercase;cursor:pointer;transition:all .25s;
+    display:none;align-items:center;gap:8px;
+  }
+  .tv-exit:hover{background:var(--danger);color:#fff}
+  body.tv-mode .tv-button{display:none}
+  body.tv-mode .tv-exit{display:flex}
+
+  /* TV MODE: hide sidebar, ampliar tudo */
+  body.tv-mode .sidebar{display:none}
+  body.tv-mode .main{margin-left:0}
+  body.tv-mode .main-header h1{font-size:42px}
+  body.tv-mode .main-header .eyebrow{font-size:11px}
+  body.tv-mode .filter-bar-inline{display:none}
+  body.tv-mode .kpi-num{font-size:54px}
+  body.tv-mode .kpi-label{font-size:11px;letter-spacing:.24em}
+  body.tv-mode .kpi-sub{font-size:12px}
+  body.tv-mode .panel-title{font-size:12px;letter-spacing:.28em}
+  body.tv-mode .ticker{height:78px}
+  body.tv-mode .ticker-item{font-size:20px;padding:0 42px}
+  body.tv-mode .ticker-item strong{font-size:24px}
+  body.tv-mode .ticker-label{font-size:14px;padding:0 28px;letter-spacing:.4em}
+  body.tv-mode .table-wrap{font-size:14px}
+  body.tv-mode table th{font-size:10px;padding:14px 16px}
+  body.tv-mode table td{padding:14px 16px;font-size:13px}
+
+  .tv-progress{
+    position:fixed;bottom:0;left:0;right:0;height:3px;background:transparent;z-index:300;
+    display:none;
+  }
+  body.tv-mode .tv-progress{display:block}
+  .tv-progress-bar{height:100%;background:var(--gold);width:0%;transition:width .25s linear}
+
+  /* ============ COLABORADOR ============ */
+  .colab-avatar{
+    width:88px;height:88px;border-radius:50%;
+    background:rgba(170,132,61,.12);border:2px solid var(--gold);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--gold-soft);font-weight:700;font-size:28px;letter-spacing:.04em;
+    flex-shrink:0;
+  }
+
+  /* ============ BADGES ============ */
+  .badge{display:inline-block;padding:3px 10px;font-size:9px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;border:1px solid;border-radius:999px}
+  .badge-ok{color:var(--ok);border-color:rgba(123,167,118,.4);background:rgba(123,167,118,.08)}
+  .badge-warn{color:var(--warn);border-color:rgba(201,169,97,.4);background:rgba(201,169,97,.08)}
+  .badge-danger{color:var(--danger);border-color:rgba(184,97,90,.4);background:rgba(184,97,90,.08)}
+  .badge-info{color:var(--info);border-color:rgba(122,143,166,.4);background:rgba(122,143,166,.08)}
+  .badge-gold{color:var(--gold-soft);border-color:rgba(170,132,61,.4);background:var(--gold-glow)}
+
+  /* ============ NEXT EVENT (highlight) ============ */
+  .next-event{background:linear-gradient(135deg,#1a1a1a 0%,#141414 100%);border:1px solid var(--line);border-left:2px solid var(--gold);padding:24px 28px;margin-bottom:24px}
+  .next-event .ev-eyebrow{color:var(--gold);font-size:9px;letter-spacing:.36em;text-transform:uppercase;font-weight:700;margin-bottom:10px}
+  .next-event .ev-title{font-size:22px;color:var(--text);margin-bottom:8px;font-weight:300;letter-spacing:-.01em}
+  .next-event .ev-desc{color:var(--text-mute);font-size:12px;font-weight:400;letter-spacing:.01em}
+
+  /* ============ ALERT ============ */
+  .alert{border:1px solid var(--line-soft);border-left:2px solid var(--gold);padding:16px 20px;background:#101010;margin-bottom:24px}
+  .alert-danger{border-left-color:var(--danger)}
+  .alert-warn{border-left-color:var(--warn)}
+  .alert-title{font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:8px}
+  .alert-body{font-size:12px;color:var(--text-mute);line-height:1.65;font-weight:400}
+
+  /* ============ ROW STATES ============ */
+  .row-concluido td{opacity:.4}
+  .row-concluido td .badge{opacity:1}
+  .row-alta td:first-child{position:relative}
+  .row-alta td:first-child::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--danger)}
+  .row-media td:first-child{position:relative}
+  .row-media td:first-child::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--warn)}
+
+  /* ============ SECTIONS ============ */
+  .section{display:none} .section.active{display:block}
+
+  /* ============ HOVER ANIMATIONS (micro-interações premium) ============ */
+  /* curva padrão pra todas animações premium */
+  .kpi,.panel,.bar-list-item,tr,.sb-tab,.sb-filter-pill,.badge,.sb-logout,.login-btn,
+  .next-event,.kpi-icon,.kpi-num,.fill,.sb-brand img,.login-logo img,
+  .big-donut-value,.ticker-item,.kpi-spark{
+    transition:all .35s cubic-bezier(.4,0,.2,1);
+  }
+
+  /* KPI card · lift + glow dourado + ícone pulsa */
+  .kpi{cursor:default;will-change:transform}
+  .kpi::before{transition:width .5s cubic-bezier(.4,0,.2,1)}
+  .kpi:hover{
+    transform:translateY(-4px);
+    background:#181818;
+    box-shadow:0 12px 32px rgba(0,0,0,.5),0 0 0 1px rgba(170,132,61,.25),0 0 24px rgba(170,132,61,.08);
+    z-index:2;
+  }
+  .kpi:hover::before{width:80px;background:linear-gradient(90deg,var(--gold),transparent)}
+  .kpi:hover .kpi-icon{transform:scale(1.1) rotate(-3deg);background:rgba(170,132,61,.25);border-color:var(--gold)}
+  .kpi:hover .kpi-num{letter-spacing:-.02em}
+  .kpi:hover .kpi-spark{opacity:1;filter:brightness(1.3)}
+
+  /* Panel genérico · glow sutil + bg mais claro */
+  .panel{cursor:default}
+  .panel:hover{background:#181818;box-shadow:0 6px 24px rgba(0,0,0,.4),0 0 0 1px rgba(170,132,61,.12)}
+
+  /* Bar list item · slide direita + bar brilha + valor cresce */
+  .bar-list-item{cursor:default;border-radius:4px;padding:6px 8px;margin:0 -8px}
+  .bar-list-item:hover{padding-left:18px;background:rgba(170,132,61,.04)}
+  .bar-list-item:hover .name{color:var(--gold-soft)}
+  .bar-list-item:hover .fill{filter:brightness(1.4) saturate(1.2);box-shadow:0 0 12px rgba(170,132,61,.3)}
+  .bar-list-item:hover .value{transform:scale(1.15);font-weight:700}
+  .bar-list-item .value,.bar-list-item .name{transition:all .35s cubic-bezier(.4,0,.2,1)}
+
+  /* Tabela · linha eleva ligeiramente + bar dourada à esquerda */
+  tbody tr{cursor:default;position:relative}
+  tbody tr td{position:relative}
+  tbody tr:hover{background:rgba(170,132,61,.04)}
+  tbody tr:hover td:first-child::after{
+    content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--gold);
+    animation:slide-in-left .35s cubic-bezier(.4,0,.2,1);
+  }
+  @keyframes slide-in-left{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+  tbody tr:hover td{color:var(--text)}
+  tbody tr:hover td.mute{color:var(--text-mute)}
+
+  /* Sidebar tab · slide direita + ícone pulsa */
+  .sb-tab:hover{padding-left:36px;letter-spacing:.08em}
+  .sb-tab:hover .icon{transform:scale(1.2);color:var(--gold)}
+  .sb-tab.active:hover{padding-left:36px}
+
+  /* Filter pills · lift + glow */
+  .sb-filter-pill:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px);background:var(--gold-glow)}
+
+  /* Logo · brilho dourado + leve scale */
+  .sb-brand{cursor:default}
+  .sb-brand:hover img{filter:drop-shadow(0 0 16px rgba(170,132,61,.5));transform:scale(1.04)}
+  .login-logo:hover img{filter:drop-shadow(0 0 24px rgba(170,132,61,.6));transform:scale(1.03)}
+
+  /* Login button · glow + lift */
+  .login-btn:hover{box-shadow:0 8px 28px rgba(170,132,61,.4),0 0 0 1px rgba(201,169,97,.6);transform:translateY(-2px)}
+
+  /* Logout button · seta desliza pra direita */
+  .sb-logout svg{transition:transform .3s cubic-bezier(.4,0,.2,1)}
+  .sb-logout:hover svg{transform:translateX(4px)}
+
+  /* Badge · scale sutil + glow */
+  .badge:hover{transform:scale(1.1);filter:brightness(1.2)}
+
+  /* Next event · borda dourada cresce + bg mais quente */
+  .next-event{cursor:default}
+  .next-event:hover{
+    border-left-width:5px;padding-left:31px;
+    background:linear-gradient(135deg,#1f1a14 0%,#181410 100%);
+    box-shadow:0 8px 32px rgba(170,132,61,.15);
+  }
+  .next-event:hover .ev-title{color:var(--gold-soft)}
+
+  /* Big donut · número central ganha glow dourado */
+  .big-donut{cursor:default}
+  .big-donut:hover .big-donut-value{text-shadow:0 0 24px rgba(170,132,61,.6),0 0 48px rgba(170,132,61,.3);transform:scale(1.04);display:inline-block}
+
+  /* Ticker item · highlight quando passa mouse (com ticker pausado) */
+  .ticker-item:hover{color:var(--gold-soft);transform:scale(1.05)}
+  .ticker-item:hover::before{background:var(--gold-soft);box-shadow:0 0 8px var(--gold)}
+
+  /* Avatar sidebar · pulsa quando mouse no badge user */
+  .sb-user{transition:background .3s}
+  .sb-user:hover{background:rgba(170,132,61,.04)}
+  .sb-user:hover .sb-user-avatar{transform:scale(1.08);box-shadow:0 0 16px rgba(170,132,61,.3)}
+  .sb-user-avatar{transition:all .3s cubic-bezier(.4,0,.2,1)}
+
+  /* Snapshot date no header */
+  .snapshot{transition:all .3s;cursor:default}
+  .snapshot:hover .date{color:var(--gold-soft)}
+
+  /* ============ TICKER (faixa de notícias estilo jornal) ============ */
+  .ticker{
+    position:relative;background:linear-gradient(90deg,#0c0c0c 0%,#141414 50%,#0c0c0c 100%);
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    overflow:hidden;white-space:nowrap;height:60px;display:flex;align-items:center;
+  }
+  .ticker-label{
+    flex-shrink:0;background:var(--gold);color:#0a0a0a;height:100%;
+    display:flex;align-items:center;padding:0 26px;
+    font-size:13px;letter-spacing:.36em;text-transform:uppercase;font-weight:800;
+    position:relative;z-index:3;gap:12px;
+  }
+  .ticker-label::after{
+    content:'';position:absolute;top:0;right:-16px;width:0;height:0;
+    border-top:30px solid transparent;border-bottom:30px solid transparent;border-left:16px solid var(--gold);
+  }
+  .ticker-label .pulse-dot{
+    width:10px;height:10px;border-radius:50%;background:#0a0a0a;
+    animation:pulse-blink 1.4s infinite ease-in-out;
+  }
+  @keyframes pulse-blink{0%,100%{opacity:1}50%{opacity:.3}}
+  .ticker-viewport{flex:1;overflow:hidden;position:relative;padding-left:24px}
+  .ticker-viewport::before{content:'';position:absolute;left:0;top:0;bottom:0;width:30px;background:linear-gradient(90deg,#0c0c0c,transparent);z-index:2;pointer-events:none}
+  .ticker-viewport::after{content:'';position:absolute;right:0;top:0;bottom:0;width:60px;background:linear-gradient(90deg,transparent,#0c0c0c);z-index:2;pointer-events:none}
+  .ticker-track{
+    display:inline-flex;align-items:center;height:100%;
+    animation:ticker-scroll 100s linear infinite;will-change:transform;
+  }
+  .ticker:hover .ticker-track{animation-play-state:paused}
+  .ticker-item{
+    display:inline-flex;align-items:center;gap:14px;padding:0 36px;
+    font-size:16px;color:var(--text);font-weight:500;letter-spacing:.02em;
+  }
+  .ticker-item::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0}
+  .ticker-item strong{color:var(--gold-soft);font-weight:700;font-size:20px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+  .ticker-item .up{color:var(--ok);font-weight:700}
+  .ticker-item .down{color:var(--danger);font-weight:700}
+  .ticker-item .warn{color:var(--warn);font-weight:700}
+  @keyframes ticker-scroll{
+    0%{transform:translateX(0)}
+    100%{transform:translateX(-50%)}
+  }
+
+  /* ============ FOOTER ============ */
+  .main-footer{margin-top:48px;padding:24px 48px;border-top:1px solid var(--line-soft);color:var(--text-faint);font-size:9px;letter-spacing:.22em;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center;font-weight:600}
+  .main-footer .gold{color:var(--gold)}
+
+  /* hide dashboards initially */
+  #master-app,#common-app{display:none}
+
+  /* ============ SHEETS CONNECTION BADGE ============ */
+  .sheets-badge{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:6px 14px;font-size:9px;letter-spacing:.22em;
+    text-transform:uppercase;font-weight:700;
+    border:1px solid;border-radius:999px;transition:all .3s;
+  }
+  .sheets-badge .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+  .sheets-badge.connected{color:var(--ok);border-color:rgba(123,167,118,.4);background:rgba(123,167,118,.08)}
+  .sheets-badge.connected .dot{background:var(--ok);box-shadow:0 0 8px var(--ok);animation:refresh-pulse 2s infinite ease-in-out}
+  .sheets-badge.demo{color:var(--text-mute);border-color:var(--line-soft);background:#141414}
+  .sheets-badge.demo .dot{background:var(--text-mute)}
+  .sheets-badge.error{color:var(--danger);border-color:rgba(184,97,90,.4);background:rgba(184,97,90,.08)}
+  .sheets-badge.error .dot{background:var(--danger);box-shadow:0 0 8px var(--danger);animation:refresh-pulse 1s infinite}
+
+  /* ============ COMMON DASHBOARD · TIPOGRAFIA AUMENTADA ============ */
+  /* Usuário Comum vê tudo maior · menos detalhamento, mais leitura à distância */
+  #common-app .main-header h1{font-size:42px;font-weight:300}
+  #common-app .main-header .eyebrow{font-size:11px;letter-spacing:.4em}
+  #common-app .main-header .snapshot .day{font-size:12px;letter-spacing:.32em}
+  #common-app .main-header .snapshot .date{font-size:20px}
+
+  #common-app .kpi{min-height:200px;padding:30px}
+  #common-app .kpi-num{font-size:60px;font-weight:200}
+  #common-app .kpi-num .unit{font-size:26px}
+  #common-app .kpi-label{font-size:11px;letter-spacing:.28em;line-height:1.6}
+  #common-app .kpi-sub{font-size:13px;font-weight:500}
+  #common-app .kpi-delta{font-size:12px;padding:5px 12px}
+  #common-app .kpi-icon{width:52px;height:52px;border-radius:10px}
+  #common-app .kpi-icon svg{width:26px;height:26px}
+
+  #common-app .panel{padding:32px 36px;min-height:320px}
+  #common-app .panel-title{font-size:13px;letter-spacing:.28em;margin-bottom:24px}
+
+  #common-app .big-donut{height:340px;max-height:340px;overflow:hidden}
+  #common-app .big-donut canvas{max-height:320px !important;height:320px !important;max-width:100% !important}
+  #common-app .big-donut-value{font-size:72px}
+  #common-app .big-donut-value .unit{font-size:32px}
+  #common-app .big-donut-label{font-size:11px;letter-spacing:.34em;max-width:200px;margin-top:14px}
+  #common-app .big-donut-sub{font-size:13px;font-weight:500}
+
+  #common-app .bar-list{gap:18px}
+  #common-app .bar-list-item{grid-template-columns:200px 1fr 80px;gap:18px;padding:10px 8px}
+  #common-app .bar-list-item .name{font-size:15px;font-weight:500}
+  #common-app .bar-list-item .track{height:12px}
+  #common-app .bar-list-item .value{font-size:17px;font-weight:600}
+
+  #common-app table{font-size:14px}
+  #common-app th{padding:14px 16px;font-size:10px;letter-spacing:.26em}
+  #common-app td{padding:16px;font-size:14px}
+  #common-app td.num-cell{font-size:16px;font-weight:600}
+  #common-app td.mute{font-size:13px}
+
+  #common-app .badge{font-size:11px;padding:5px 14px;letter-spacing:.16em}
+
+  #common-app .next-event{padding:30px 36px}
+  #common-app .next-event .ev-eyebrow{font-size:11px;letter-spacing:.4em}
+  #common-app .next-event .ev-title{font-size:30px}
+  #common-app .next-event .ev-desc{font-size:14px}
+
+  #common-app .alert{padding:20px 26px}
+  #common-app .alert-title{font-size:11px;letter-spacing:.3em}
+  #common-app .alert-body{font-size:14px;line-height:1.7}
+
+  /* Ticker maior só no Common */
+  #common-app .ticker{height:74px}
+  #common-app .ticker-label{font-size:15px;padding:0 32px;letter-spacing:.4em}
+  #common-app .ticker-label::after{border-top:37px solid transparent;border-bottom:37px solid transparent}
+  #common-app .ticker-label .pulse-dot{width:12px;height:12px}
+  #common-app .ticker-item{font-size:19px;padding:0 44px}
+  #common-app .ticker-item strong{font-size:24px}
+  #common-app .ticker-item::before{width:8px;height:8px}
+
+  /* utility */
+  .grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<!-- Login screen removida — substituída por toggle no sidebar -->
+
+<!-- Botão Modo TV (fixo top-right) -->
+<button class="tv-button" onclick="enterTVMode()" title="Apresentação em tela cheia">
+  <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+  Modo TV
+</button>
+<button class="tv-exit" onclick="exitTVMode()" title="Sair do modo TV (Esc)">
+  <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  Sair (Esc)
+</button>
+<div class="tv-progress"><div class="tv-progress-bar" id="tvProgressBar"></div></div>
+
+<!-- ============ MASTER APP ============ -->
+<div id="master-app">
+  <aside class="sidebar">
+    <div class="sb-brand">
+      <img src="fr-monogram.png" alt="FR">
+      <div class="title">PULSE</div>
+      <div class="sub">Felipe Ramos Adv · BI</div>
+    </div>
+    <div class="sb-user">
+      <div class="sb-user-avatar" id="masterAvatar">FR</div>
+      <div class="sb-user-info">
+        <div class="role">Master</div>
+        <div class="name" id="masterUserName">—</div>
+      </div>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-nav-label">Painéis</div>
+      <div class="sb-tab active" onclick="showTab('exec',this)">
+        <span class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg></span>
+        Visão Executiva
+      </div>
+      <div class="sb-tab" onclick="showTab('prazos',this)">
+        <span class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+        Prazos
+      </div>
+      <div class="sb-tab" onclick="showTab('produtividade',this)">
+        <span class="icon"><svg viewBox="0 0 24 24"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="14 7 21 7 21 14"/></svg></span>
+        Produtividade
+      </div>
+      <div class="sb-tab" onclick="showTab('equipe',this)">
+        <span class="icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></span>
+        Equipe
+      </div>
+      <div class="sb-tab" onclick="showTab('colaborador',this)">
+        <span class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg></span>
+        Colaborador
+      </div>
+      <div class="sb-tab" onclick="showTab('agenda',this)">
+        <span class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+        Agenda
+      </div>
+      <div class="sb-tab" onclick="showTab('paradas',this)">
+        <span class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+        Tarefas Paradas
+      </div>
+    </nav>
+    <div class="sb-filter">
+      <div class="sb-filter-label">Período</div>
+      <span class="sb-filter-pill active">Hoje</span>
+      <span class="sb-filter-pill">7d</span>
+      <span class="sb-filter-pill">30d</span>
+    </div>
+    <div class="sb-refresh">
+      <div class="sb-refresh-label"><span class="refresh-dot"></span>Atualizações Power BI</div>
+      <div class="sb-refresh-times" id="masterRefreshTimes">
+        <div class="sb-refresh-time">07h</div>
+        <div class="sb-refresh-time">13h</div>
+        <div class="sb-refresh-time">17h</div>
+      </div>
+      <div class="sb-refresh-status" id="masterRefreshStatus">
+        Última: <strong>—</strong><br>Próxima: <strong>—</strong>
+      </div>
+    </div>
+    <div class="sb-footer">
+      <button class="sb-toggle" onclick="toggleView()">
+        <div class="toggle-label">Vista Atual</div>
+        <div class="toggle-current">
+          Master <span class="arrow">⇄</span>
+        </div>
+        <div class="toggle-next">Mudar para vista Equipe</div>
+      </button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="ticker">
+      <div class="ticker-label"><span class="pulse-dot"></span>Ao Vivo</div>
+      <div class="ticker-viewport">
+        <div class="ticker-track" id="masterTicker"></div>
+      </div>
+    </div>
+    <header class="main-header">
+      <div>
+        <div class="eyebrow" id="masterEyebrow">I · Visão Executiva</div>
+        <h1 id="masterTitle">Pulso operacional</h1>
+      </div>
+      <div class="snapshot" style="display:flex;flex-direction:column;align-items:flex-end;gap:10px">
+        <div class="sheets-badge demo" id="sheetsBadgeMaster"><span class="dot"></span>Modo demo</div>
+        <div>
+          <div class="day">Snapshot · 01.06.2026</div>
+          <div class="date">Sexta-feira · v04</div>
+        </div>
+      </div>
+    </header>
+    <div class="gold-rule-bottom"></div>
+
+    <div class="main-body">
+
+      <!-- =============== VISÃO EXECUTIVA =============== -->
+      <section class="section active" id="section-exec">
+
+        <!-- KPI v3 -->
+        <div class="kpi-grid grid-cols-4">
+          <div class="kpi">
+            <div class="kpi-head">
+              <div class="kpi-icon icon-ok"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="kpi-label">Prazos Hoje · 100% OK</div>
+            </div>
+            <div class="kpi-mid">
+              <div class="kpi-num ok">03</div>
+              <span class="kpi-delta up">▲ 100%</span>
+            </div>
+            <div class="kpi-foot">
+              <canvas class="kpi-spark" data-spark="2,3,1,2,3,2,3" data-color="ok"></canvas>
+              <div class="kpi-sub">Todos concluídos<br>por Giovanna</div>
+            </div>
+          </div>
+
+          <div class="kpi">
+            <div class="kpi-head">
+              <div class="kpi-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+              <div class="kpi-label">Tarefas Ativas</div>
+            </div>
+            <div class="kpi-mid">
+              <div class="kpi-num gold">18</div>
+              <span class="kpi-delta up">▲ 2</span>
+            </div>
+            <div class="kpi-foot">
+              <canvas class="kpi-spark" data-spark="14,16,15,17,16,17,18" data-color="gold"></canvas>
+              <div class="kpi-sub">Equipe executora<br>PF interno</div>
+            </div>
+          </div>
+
+          <div class="kpi">
+            <div class="kpi-head">
+              <div class="kpi-icon icon-warn"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div>
+              <div class="kpi-label">Publicações p/ Tratar</div>
+            </div>
+            <div class="kpi-mid">
+              <div class="kpi-num warn">05</div>
+              <span class="kpi-delta down">▼ 3</span>
+            </div>
+            <div class="kpi-foot">
+              <canvas class="kpi-spark" data-spark="8,7,6,5,4,5,5" data-color="warn"></canvas>
+              <div class="kpi-sub">0 de hoje<br>1 antiga</div>
+            </div>
+          </div>
+
+          <div class="kpi">
+            <div class="kpi-head">
+              <div class="kpi-icon icon-danger"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
+              <div class="kpi-label">Aproveitamento WM</div>
+            </div>
+            <div class="kpi-mid">
+              <div class="kpi-num danger">40,5<span class="unit">%</span></div>
+              <span class="kpi-delta down">▼ 19,2pp</span>
+            </div>
+            <div class="kpi-foot">
+              <canvas class="kpi-spark" data-spark="60,58,55,50,48,42,40" data-color="danger"></canvas>
+              <div class="kpi-sub">4 de 7 ativos<br>vs 28/04</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DONUT GRANDE + BAR LIST -->
+        <div class="panels-grid grid-cols-3">
+          <div class="panel">
+            <div class="panel-title">Taxa de Cumprimento de Prazo</div>
+            <div class="big-donut">
+              <canvas id="bigDonut"></canvas>
+              <div class="big-donut-center">
+                <div class="big-donut-value">95<span class="unit">%</span></div>
+                <div class="big-donut-label">Prazos cumpridos no mês</div>
+                <div class="big-donut-sub">20 de 21 · 1 em risco</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" style="grid-column:span 2">
+            <div class="panel-title">Tarefas Ativas · por Responsável Executor</div>
+            <div class="bar-list" style="margin-top:8px">
+              <div class="bar-list-item"><div class="name">Marcia Nilander</div><div class="track"><div class="fill" style="width:100%"></div></div><div class="value">7</div></div>
+              <div class="bar-list-item"><div class="name">Nicolle Gura</div><div class="track"><div class="fill" style="width:57%"></div></div><div class="value">4</div></div>
+              <div class="bar-list-item"><div class="name">Giuliano Zan</div><div class="track"><div class="fill" style="width:43%"></div></div><div class="value">3</div></div>
+              <div class="bar-list-item"><div class="name">Giovanna Pires</div><div class="track"><div class="fill" style="width:28%"></div></div><div class="value">2</div></div>
+              <div class="bar-list-item"><div class="name">Guilherme C.</div><div class="track"><div class="fill" style="width:28%"></div></div><div class="value">2</div></div>
+              <div class="bar-list-item"><div class="name">Pedro Benevenuto</div><div class="track"><div class="fill" style="width:0%"></div></div><div class="value" style="color:var(--text-faint)">0</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PRAZOS PRÓXIMOS + APROVEITAMENTO -->
+        <div class="panels-grid grid-cols-2">
+          <div class="panel">
+            <div class="panel-title">Próximos Prazos · 15 → 19.05</div>
+            <div style="display:flex;flex-direction:column;gap:14px;font-size:12px">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid var(--line-soft)">
+                <div><div style="color:var(--text);font-weight:500">2 audiências hoje</div><div style="font-size:10px;color:var(--text-mute);margin-top:2px">Xis 6 · 14h00 · Michi House · 16h30</div></div>
+                <span class="badge badge-ok">Hoje OK</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid var(--line-soft)">
+                <div><div style="color:var(--text);font-weight:500">Comprovar JG · Ryco</div><div style="font-size:10px;color:var(--text-mute);margin-top:2px">Ryco Alimentos × Cabral Comércio</div></div>
+                <span class="badge badge-ok">18.05 OK</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid var(--line-soft)">
+                <div><div style="color:var(--text);font-weight:500">Contrarrazões · Jeniffer × Xis 1</div><div style="font-size:10px;color:var(--text-mute);margin-top:2px">Grupo Titan · resp. Giovanna</div></div>
+                <span class="badge badge-danger">3 dias</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid var(--line-soft)">
+                <div><div style="color:var(--text);font-weight:500">Pagamento Xis 5 · Gecilene</div><div style="font-size:10px;color:var(--text-mute);margin-top:2px">Grupo Titan · resp. Giovanna</div></div>
+                <span class="badge badge-danger">3 dias</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div><div style="color:var(--text);font-weight:500">Possibilidade de HC · GO GOV</div><div style="font-size:10px;color:var(--text-mute);margin-top:2px">João Vitor Maximiano</div></div>
+                <span class="badge badge-danger">3 dias</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-title">Aproveitamento da Equipe · Hoje</div>
+            <div class="bar-list" style="margin-top:8px">
+              <div class="bar-list-item"><div class="name">Marcia Nilander</div><div class="track"><div class="fill ok" style="width:29%"></div></div><div class="value ok">29%</div></div>
+              <div class="bar-list-item"><div class="name">Juliana Gonzales</div><div class="track"><div class="fill" style="width:23%"></div></div><div class="value">23%</div></div>
+              <div class="bar-list-item"><div class="name">Giovanna Pires</div><div class="track"><div class="fill warn" style="width:14%"></div></div><div class="value warn">14%</div></div>
+              <div class="bar-list-item"><div class="name">Erick Constancio</div><div class="track"><div class="fill danger" style="width:2%"></div></div><div class="value danger">2%</div></div>
+              <div class="bar-list-item" style="opacity:.5"><div class="name">Giuliano Zan</div><div class="track"></div><div class="value" style="color:var(--text-faint)">—</div></div>
+              <div class="bar-list-item" style="opacity:.5"><div class="name">Guilherme C.</div><div class="track"></div><div class="value" style="color:var(--text-faint)">—</div></div>
+              <div class="bar-list-item" style="opacity:.5"><div class="name">Nicolle Gura</div><div class="track"></div><div class="value" style="color:var(--text-faint)">—</div></div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- =============== PRAZOS =============== -->
+      <section class="section" id="section-prazos">
+        <div class="kpi-grid grid-cols-4">
+          <div class="kpi prazos-filter-card" data-filter="concluido"><div class="kpi-head"><div class="kpi-icon icon-ok"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="kpi-label">Já Concluídos</div></div><div class="kpi-mid"><div class="kpi-num ok" id="prazoKpiConcluidos">—</div></div><div class="kpi-foot"><div class="kpi-sub">cumpridos no período</div><canvas class="kpi-spark" data-spark="1,2,2,3,3,4,4" data-color="ok"></canvas></div></div>
+          <div class="kpi prazos-filter-card" data-filter="3dias"><div class="kpi-head"><div class="kpi-icon icon-danger"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="kpi-label">Vence em 3 dias</div></div><div class="kpi-mid"><div class="kpi-num danger" id="prazoKpi3dias">—</div></div><div class="kpi-foot"><div class="kpi-sub">próximos 3 dias úteis</div><canvas class="kpi-spark" data-spark="0,1,2,2,3,3,3" data-color="danger"></canvas></div></div>
+          <div class="kpi prazos-filter-card" data-filter="aconcluir"><div class="kpi-head"><div class="kpi-icon icon-warn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="kpi-label">A concluir</div></div><div class="kpi-mid"><div class="kpi-num warn" id="prazoKpiAconcluir">—</div></div><div class="kpi-foot"><div class="kpi-sub">em aberto</div><canvas class="kpi-spark" data-spark="6,7,8,9,9,10,10" data-color="warn"></canvas></div></div>
+          <div class="kpi prazos-filter-card" data-filter="all"><div class="kpi-head"><div class="kpi-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg></div><div class="kpi-label">Total</div></div><div class="kpi-mid"><div class="kpi-num gold" id="prazoKpiTotal">—</div></div><div class="kpi-foot"><div class="kpi-sub">prazos no horizonte</div><canvas class="kpi-spark" data-spark="0,5,10,15,18,20,21" data-color="gold"></canvas></div></div>
+        </div>
+
+        <div class="panel" style="padding:0">
+          <div style="padding:20px 28px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+            <div class="panel-title" style="margin:0">Lista de Prazos</div>
+            <div class="filter-bar-inline" style="display:flex;align-items:center;gap:8px;margin-left:auto;flex-wrap:wrap">
+              <span class="filter-label-mini">Filtrar:</span>
+              <button class="filter-chip active" data-prazo-filter="all">Todos</button>
+              <button class="filter-chip" data-prazo-filter="concluido">Concluídos</button>
+              <button class="filter-chip" data-prazo-filter="3dias">3 dias</button>
+              <button class="filter-chip" data-prazo-filter="aconcluir">A concluir</button>
+              <span class="filter-label-mini" style="margin-left:14px">Ordenar:</span>
+              <select id="prazoSort" class="filter-select">
+                <option value="data-asc">Data ↑</option>
+                <option value="data-desc">Data ↓</option>
+                <option value="az">A-Z</option>
+                <option value="za">Z-A</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-wrap"><table><thead><tr><th>Data</th><th>Dia</th><th>Título</th><th>Processo</th><th>Status</th></tr></thead><tbody id="tabelaPrazos"></tbody></table></div>
+        </div>
+      </section>
+
+      <!-- =============== PRODUTIVIDADE =============== -->
+      <section class="section" id="section-produtividade">
+        <div class="kpi-grid grid-cols-4">
+          <div class="kpi"><div class="kpi-head"><div class="kpi-icon icon-danger"><svg viewBox="0 0 24 24"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg></div><div class="kpi-label">Aproveitamento Médio</div></div><div class="kpi-mid"><div class="kpi-num danger">40,5<span class="unit">%</span></div><span class="kpi-delta down">▼ 19,2pp</span></div><div class="kpi-foot"><canvas class="kpi-spark" data-spark="60,58,55,50,48,42,40" data-color="danger"></canvas><div class="kpi-sub">vs snapshot 28/04</div></div></div>
+          <div class="kpi"><div class="kpi-head"><div class="kpi-icon icon-warn"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div class="kpi-label">Ativos no Dia</div></div><div class="kpi-mid"><div class="kpi-num warn">04<span class="unit"> / 7</span></div></div><div class="kpi-foot"><canvas class="kpi-spark" data-spark="6,6,5,5,4,4,4" data-color="warn"></canvas><div class="kpi-sub">3 sem registro</div></div></div>
+          <div class="kpi"><div class="kpi-head"><div class="kpi-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="kpi-label">Captadas Totais</div></div><div class="kpi-mid"><div class="kpi-num gold">5,5<span class="unit">h</span></div></div><div class="kpi-foot"><canvas class="kpi-spark" data-spark="4,5,5,6,5,5,5.5" data-color="gold"></canvas><div class="kpi-sub">soma dos 4 ativos</div></div></div>
+          <div class="kpi"><div class="kpi-head"><div class="kpi-icon icon-ok"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div class="kpi-label">Score TOP</div></div><div class="kpi-mid"><div class="kpi-num ok">48,29</div></div><div class="kpi-foot"><canvas class="kpi-spark" data-spark="35,40,42,45,46,48,48" data-color="ok"></canvas><div class="kpi-sub">Marcia · líder do dia</div></div></div>
+        </div>
+
+        <div class="panels-grid grid-cols-2">
+          <div class="panel">
+            <div class="panel-title">Aproveitamento por Colaborador</div>
+            <div class="bar-list" style="margin-top:8px">
+              <div class="bar-list-item"><div class="name">Marcia</div><div class="track"><div class="fill ok" style="width:58%"></div></div><div class="value ok">29%</div></div>
+              <div class="bar-list-item"><div class="name">Juliana</div><div class="track"><div class="fill" style="width:46%"></div></div><div class="value">23%</div></div>
+              <div class="bar-list-item"><div class="name">Giovanna</div><div class="track"><div class="fill warn" style="width:28%"></div></div><div class="value warn">14%</div></div>
+              <div class="bar-list-item"><div class="name">Erick</div><div class="track"><div class="fill danger" style="width:4%"></div></div><div class="value danger">2%</div></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-title">Score GenIA · Ranking</div>
+            <div class="bar-list" style="margin-top:8px">
+              <div class="bar-list-item"><div class="name">Marcia</div><div class="track"><div class="fill ok" style="width:100%"></div></div><div class="value ok">48,29</div></div>
+              <div class="bar-list-item"><div class="name">Juliana</div><div class="track"><div class="fill" style="width:52%"></div></div><div class="value">25,21</div></div>
+              <div class="bar-list-item"><div class="name">Giovanna</div><div class="track"><div class="fill warn" style="width:37%"></div></div><div class="value warn">18,00</div></div>
+              <div class="bar-list-item"><div class="name">Erick</div><div class="track"><div class="fill danger" style="width:3%"></div></div><div class="value danger">1,37</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel" style="padding:0">
+          <div style="padding:20px 28px;border-bottom:1px solid var(--line)"><div class="panel-title" style="margin:0">Detalhamento Completo · 01.06.2026</div></div>
+          <div class="table-wrap"><table><thead><tr><th>Colaborador</th><th>Aproveit.</th><th>Captadas</th><th>Produtivas</th><th>Neutras</th><th>Ócio</th><th>Score</th></tr></thead><tbody id="tabelaWorkmonitor"></tbody></table></div>
+        </div>
+
+        <div class="alert alert-danger" style="margin-top:24px">
+          <div class="alert-title">Alerta · Aproveitamento crítico</div>
+          <div class="alert-body">Apenas <strong style="color:var(--text)">4 de 7</strong> monitorados registraram atividade. Aproveitamento <strong style="color:var(--danger)">40,5%</strong> está abaixo do snapshot anterior (59,8% em 28.04). Investigar Giuliano, Guilherme e Nicolle.</div>
+        </div>
+      </section>
+
+      <!-- =============== EQUIPE =============== -->
+      <section class="section" id="section-equipe">
+        <div class="kpi-grid grid-cols-4">
+          <div class="kpi"><div class="kpi-head"><div class="kpi-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div class="kpi-label">Colaboradores Ativos</div></div><div class="kpi-mid"><div class="kpi-num gold">09</div></div><div class="kpi-foot"><canvas class="kpi-spark" data-spark="9,9,9,8,9,9,9" data-color="gold"></canvas><div class="kpi-sub">sem Adriane Santos</div></div></div>
+          <div class="kpi"><div class="kpi-head"><div class="kpi-icon icon-ok"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="kpi-label">Executores Reais</div></div><div class="kpi-mid"><div class="kpi-num ok">05</div></div><div class="kpi-foot"><canvas class="kpi-spark" data-spark="5,5,5,5,5,5,5" data-color="ok"></canvas><div class="kpi-sub">excl. baseline + MKT</div></div></div>
+          <div class="kpi"><div class="kpi-head"><div class="kpi-icon icon-warn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="kpi-label">Sem WM Hoje</div></div><div class="kpi-mid"><div class="kpi-num warn">03</div></div><div class="kpi-foot"><canvas class="kpi-spark" data-spark="1,1,2,2,3,3,3" data-color="warn"></canvas><div class="kpi-sub">Giuliano · Guilherme · Nicolle</div></div></div>
+          <div class="kpi"><div class="kpi-head"><div class="kpi-icon icon-ok"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div class="kpi-label">Score TOP</div></div><div class="kpi-mid"><div class="kpi-num ok">48,29</div></div><div class="kpi-foot"><canvas class="kpi-spark" data-spark="40,42,44,45,46,48,48" data-color="ok"></canvas><div class="kpi-sub">Marcia · líder</div></div></div>
+        </div>
+
+        <div class="panel" style="padding:0">
+          <div style="padding:20px 28px;border-bottom:1px solid var(--line)"><div class="panel-title" style="margin:0">Ranking · Colaboradores Ativos · 01.06</div></div>
+          <div class="table-wrap"><table><thead><tr><th>#</th><th>Colaborador</th><th>Função</th><th>Classe</th><th>Tar.</th><th>Prazos</th><th>Aprov.</th><th>Score</th><th>Observação</th></tr></thead><tbody id="tabelaRanking"></tbody></table></div>
+        </div>
+
+        <div class="alert alert-warn" style="margin-top:24px">
+          <div class="alert-title">Entendimento · Prazos vs Tarefas</div>
+          <div class="alert-body"><strong style="color:var(--gold-soft)">Giovanna</strong> concentra a controladoria dos prazos processuais. Cada prazo tem tarefa vinculada com PF interno (2 dias úteis antes) e responsável real executor. <strong style="color:var(--gold-soft)">Pedro Benevenuto</strong> mantido no quadro (escopo fiscal · IR · societário).</div>
+        </div>
+      </section>
+
+      <!-- =============== COLABORADOR =============== -->
+      <section class="section" id="section-colaborador">
+
+        <!-- Filtro de seleção -->
+        <div class="panel" style="padding:22px 28px;margin-bottom:24px">
+          <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+            <span class="filter-label-mini">Analisar colaborador:</span>
+            <select id="colaboradorSelect" class="filter-select" style="min-width:260px;font-size:13px;padding:10px 14px">
+              <option value="">— Escolha um colaborador —</option>
+            </select>
+            <span id="colabFilterHint" class="filter-label-mini" style="margin-left:auto;color:var(--text-faint)">Mostra aproveitamento, score, jornada e tarefas individuais</span>
+          </div>
+        </div>
+
+        <!-- Empty state -->
+        <div id="colabEmpty" class="alert">
+          <div class="alert-title">Selecione um colaborador</div>
+          <div class="alert-body">Escolha um nome no menu acima para visualizar os dados individuais — aproveitamento WM, score GenIA, distribuição de jornada e lista de tarefas.</div>
+        </div>
+
+        <!-- Header (escondido até selecionar) -->
+        <div id="colabContent" style="display:none">
+          <div class="panel" style="display:flex;gap:24px;align-items:center;padding:32px 36px;margin-bottom:24px">
+            <div class="colab-avatar" id="colabAvatar">??</div>
+            <div style="flex:1;min-width:0">
+              <div class="eyebrow" style="color:var(--gold)">Análise individual</div>
+              <h2 id="colabNome" style="font-size:32px;font-weight:300;margin:6px 0;letter-spacing:-.01em">—</h2>
+              <div style="color:var(--text-mute);font-size:13px;display:flex;gap:14px;flex-wrap:wrap">
+                <span><strong id="colabFuncao" style="color:var(--text)">—</strong></span>
+                <span style="color:var(--text-faint)">·</span>
+                <span id="colabClasseBadge">—</span>
+                <span style="color:var(--text-faint)">·</span>
+                <span>Posição no ranking: <strong id="colabPos" style="color:var(--gold-soft)">—</strong></span>
+                <span style="color:var(--text-faint)">·</span>
+                <span id="colabAtivoBadge"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- KPIs -->
+          <div class="kpi-grid grid-cols-4">
+            <div class="kpi">
+              <div class="kpi-head"><div class="kpi-icon icon-ok"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="kpi-label">Aproveitamento WM</div></div>
+              <div class="kpi-mid"><div class="kpi-num gold" id="colabAprov">—<span class="unit">%</span></div></div>
+              <div class="kpi-foot"><div class="kpi-sub">% do tempo produtivo</div><canvas class="kpi-spark" data-spark="35,40,42,45,46,48,48" data-color="ok"></canvas></div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-head"><div class="kpi-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div class="kpi-label">Score GenIA</div></div>
+              <div class="kpi-mid"><div class="kpi-num ok" id="colabScore">—</div></div>
+              <div class="kpi-foot"><div class="kpi-sub">índice geral de produtividade</div><canvas class="kpi-spark" data-spark="40,42,44,45,46,48,48" data-color="gold"></canvas></div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-head"><div class="kpi-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="kpi-label">Horas Captadas</div></div>
+              <div class="kpi-mid"><div class="kpi-num gold" id="colabCaptadas">—<span class="unit">h</span></div></div>
+              <div class="kpi-foot"><div class="kpi-sub">jornada registrada hoje</div><canvas class="kpi-spark" data-spark="3,4,4,5,5,5,5" data-color="gold"></canvas></div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-head"><div class="kpi-icon icon-warn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="kpi-label">Tarefas atribuídas</div></div>
+              <div class="kpi-mid"><div class="kpi-num warn" id="colabQtdTarefas">—</div></div>
+              <div class="kpi-foot"><div class="kpi-sub">em acompanhamento</div><canvas class="kpi-spark" data-spark="3,3,4,4,5,5,5" data-color="warn"></canvas></div>
+            </div>
+          </div>
+
+          <!-- Stats lado a lado: jornada e tarefas -->
+          <div class="panels-grid grid-cols-2" style="margin-top:0">
+            <div class="panel">
+              <div class="panel-title">Distribuição da Jornada (h)</div>
+              <div class="bar-list" id="colabHorasList" style="margin-top:8px"></div>
+            </div>
+            <div class="panel">
+              <div class="panel-title">Resumo de Tarefas</div>
+              <div class="bar-list" id="colabTaskSummary" style="margin-top:8px"></div>
+            </div>
+          </div>
+
+          <!-- Lista de tarefas individuais -->
+          <div class="panel" style="padding:0;margin-top:24px">
+            <div style="padding:20px 28px;border-bottom:1px solid var(--line)"><div class="panel-title" style="margin:0">Tarefas do colaborador</div></div>
+            <div class="table-wrap"><table><thead><tr><th>Status</th><th>Título</th><th>PF</th><th>Último coment.</th><th>Observação</th></tr></thead><tbody id="tabelaColabTasks"></tbody></table></div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- =============== AGENDA =============== -->
+      <section class="section" id="section-agenda">
+        <div class="kpi-grid grid-cols-4">
+          <div class="kpi"><div class="kpi-head"><div class="kpi-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg></div><div class="kpi-label">Audiências Agendadas</div></div><div class="kpi-mid"><div class="kpi-num gold">05</div></div><div class="kpi-foot"><canvas class="kpi-spark" data-spark="3,4,4,5,5,5,5" data-color="gold"></canvas><div class="kpi-sub">18.05 → 19.06</div></div></div>
+          <div class="kpi"><div class="kpi-head"><div class="kpi-icon icon-danger"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div><div class="kpi-label">Publicações p/ Tratar</div></div><div class="kpi-mid"><div class="kpi-num danger">2</div></div><div class="kpi-foot"><canvas class="kpi-spark" data-spark="8,7,6,5,5,5,5" data-color="danger"></canvas><div class="kpi-sub">0 de hoje · 1 antiga</div></div></div>
+          <div class="kpi"><div class="kpi-head"><div class="kpi-icon icon-ok"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="kpi-label">Tratadas Hoje</div></div><div class="kpi-mid"><div class="kpi-num ok">13</div></div><div class="kpi-foot"><canvas class="kpi-spark" data-spark="0,1,1,2,2,3,3" data-color="ok"></canvas><div class="kpi-sub">01.06</div></div></div>
+          <div class="kpi"><div class="kpi-head"><div class="kpi-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg></div><div class="kpi-label">Outros Eventos</div></div><div class="kpi-mid"><div class="kpi-num" style="color:var(--text-mute)">00</div></div><div class="kpi-foot"><canvas class="kpi-spark" data-spark="0,0,0,0,0,0,0" data-color="mute"></canvas><div class="kpi-sub">nenhum agendado</div></div></div>
+        </div>
+
+        <div class="next-event">
+          <div class="ev-eyebrow">Próxima audiência · em 3 dias</div>
+          <div class="ev-title">Segunda 18.05 · 15h30 · Audiência presencial</div>
+          <div class="ev-desc">Ester Lara × FQ Games Ltda · Processo 4069772-02.2025.8.26.0100 · Responsável Giovanna Pires</div>
+        </div>
+
+        <div class="panels-grid grid-cols-2">
+          <div class="panel" style="padding:0">
+            <div style="padding:20px 28px;border-bottom:1px solid var(--line)"><div class="panel-title" style="margin:0">Audiências · Até 30.06</div></div>
+            <div class="table-wrap"><table><thead><tr><th>Data</th><th>Hora</th><th>Tipo</th><th>Processo</th></tr></thead><tbody id="tabelaAudiencias"></tbody></table></div>
+          </div>
+          <div class="panel" style="padding:0">
+            <div style="padding:20px 28px;border-bottom:1px solid var(--line)"><div class="panel-title" style="margin:0">Publicações</div></div>
+            <div class="table-wrap"><table><thead><tr><th>Data</th><th>Processo</th><th>Resp.</th><th>Status</th></tr></thead><tbody id="tabelaPublicacoes"></tbody></table></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =============== PARADAS =============== -->
+      <section class="section" id="section-paradas">
+        <div class="alert">
+          <div class="alert-title">Status binário · Feito ou Pendente</div>
+          <div class="alert-body">Marque a coluna <strong style="color:var(--gold-soft)">feito</strong> como <strong>TRUE</strong> na planilha conforme as tarefas forem sendo concluídas. O dashboard atualiza automaticamente.</div>
+        </div>
+
+        <div class="kpi-grid grid-cols-4">
+          <div class="kpi">
+            <div class="kpi-head"><div class="kpi-icon icon-ok"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="kpi-label">Feitas</div></div>
+            <div class="kpi-mid"><div class="kpi-num ok" id="kpiFeitas">—</div></div>
+            <div class="kpi-foot"><canvas class="kpi-spark" data-spark="0,1,1,2,2,3,3" data-color="ok"></canvas><div class="kpi-sub">tarefas concluídas</div></div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-head"><div class="kpi-icon icon-warn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="kpi-label">Pendentes</div></div>
+            <div class="kpi-mid"><div class="kpi-num warn" id="kpiPendentes">—</div></div>
+            <div class="kpi-foot"><canvas class="kpi-spark" data-spark="18,17,17,16,16,15,15" data-color="warn"></canvas><div class="kpi-sub">em aberto</div></div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-head"><div class="kpi-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><div class="kpi-label">% Conclusão</div></div>
+            <div class="kpi-mid"><div class="kpi-num gold" id="kpiConclusao">—<span class="unit">%</span></div></div>
+            <div class="kpi-foot"><canvas class="kpi-spark" data-spark="0,5,10,15,15,17,17" data-color="gold"></canvas><div class="kpi-sub">taxa de conclusão</div></div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-head"><div class="kpi-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div><div class="kpi-label">Total Tarefas</div></div>
+            <div class="kpi-mid"><div class="kpi-num gold" id="kpiTotal">—</div></div>
+            <div class="kpi-foot"><canvas class="kpi-spark" data-spark="16,17,17,18,18,18,18" data-color="gold"></canvas><div class="kpi-sub">em acompanhamento</div></div>
+          </div>
+        </div>
+
+        <div class="panels-grid grid-cols-3">
+          <div class="panel">
+            <div class="panel-title">Conclusão</div>
+            <div class="big-donut">
+              <canvas id="paradaDonut"></canvas>
+              <div class="big-donut-center">
+                <div class="big-donut-value" id="paradaDonutPct">—<span class="unit">%</span></div>
+                <div class="big-donut-label">Feitas</div>
+                <div class="big-donut-sub" id="paradaDonutSub">— de —</div>
+              </div>
+            </div>
+          </div>
+          <div class="panel" style="grid-column:span 2">
+            <div class="panel-title">Por Responsável · Feitas vs Pendentes</div>
+            <div class="bar-list" id="paradasResponsavelList" style="margin-top:8px"></div>
+          </div>
+        </div>
+
+        <div class="panel" style="padding:0">
+          <div style="padding:20px 28px;border-bottom:1px solid var(--line)"><div class="panel-title" style="margin:0">Todas as Tarefas · Status binário</div></div>
+          <div class="table-wrap"><table><thead><tr><th>Status</th><th>Título</th><th>Responsável</th><th>PF</th><th>Último coment.</th><th>Observação</th></tr></thead><tbody id="tabelaParadas"></tbody></table></div>
+        </div>
+      </section>
+
+    </div><!-- /main-body -->
+
+    <footer class="main-footer">
+      <div><span class="gold">PULSE</span> · Felipe Ramos Advogados · <span class="gold">v04</span></div>
+      <div>Snapshot 01.06.2026 · 18/18 tarefas auditadas</div>
+    </footer>
+
+  </div><!-- /main -->
+</div><!-- /master-app -->
+
+<!-- ============ COMMON APP ============ -->
+<div id="common-app">
+  <aside class="sidebar">
+    <div class="sb-brand">
+      <img src="fr-monogram.png" alt="FR">
+      <div class="title">PULSE</div>
+      <div class="sub">Felipe Ramos Adv · BI</div>
+    </div>
+    <div class="sb-user">
+      <div class="sb-user-avatar" style="background:rgba(122,143,166,.15);border-color:rgba(122,143,166,.4);color:var(--info)">CM</div>
+      <div class="sb-user-info">
+        <div class="role" style="color:var(--info)">Equipe</div>
+        <div class="name" id="commonUserName">—</div>
+      </div>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-nav-label">Painel</div>
+      <div class="sb-tab active">
+        <span class="icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></span>
+        Panorama da Equipe
+      </div>
+    </nav>
+    <div class="sb-filter">
+      <div class="sb-filter-label">Período</div>
+      <span class="sb-filter-pill active">Hoje</span>
+      <span class="sb-filter-pill">7d</span>
+      <span class="sb-filter-pill">30d</span>
+    </div>
+    <div class="sb-refresh">
+      <div class="sb-refresh-label"><span class="refresh-dot"></span>Atualizações Power BI</div>
+      <div class="sb-refresh-times" id="commonRefreshTimes">
+        <div class="sb-refresh-time">07h</div>
+        <div class="sb-refresh-time">13h</div>
+        <div class="sb-refresh-time">17h</div>
+      </div>
+      <div class="sb-refresh-status" id="commonRefreshStatus">
+        Última: <strong>—</strong><br>Próxima: <strong>—</strong>
+      </div>
+    </div>
+    <div class="sb-footer">
+      <button class="sb-toggle" onclick="toggleView()">
+        <div class="toggle-label">Vista Atual</div>
+        <div class="toggle-current">
+          Equipe <span class="arrow">⇄</span>
+        </div>
+        <div class="toggle-next">Mudar para vista Master</div>
+      </button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="ticker">
+      <div class="ticker-label"><span class="pulse-dot"></span>Ao Vivo</div>
+      <div class="ticker-viewport">
+        <div class="ticker-track" id="commonTicker"></div>
+      </div>
+    </div>
+    <header class="main-header">
+      <div>
+        <div class="eyebrow">Panorama da Equipe</div>
+        <h1>Operação consolidada</h1>
+      </div>
+      <div class="snapshot" style="display:flex;flex-direction:column;align-items:flex-end;gap:10px">
+        <div class="sheets-badge demo" id="sheetsBadgeCommon"><span class="dot"></span>Modo demo</div>
+        <div>
+          <div class="day">Snapshot · 01.06.2026</div>
+          <div class="date">Visão agregada</div>
+        </div>
+      </div>
+    </header>
+    <div class="gold-rule-bottom"></div>
+
+    <div class="main-body">
+
+      <div class="alert">
+        <div class="alert-title">Visão Equipe · Dados consolidados</div>
+        <div class="alert-body">Panorama operacional da equipe de forma consolidada. Métricas individuais e ranking estão disponíveis apenas no acesso Master.</div>
+      </div>
+
+      <div class="kpi-grid grid-cols-4">
+        <div class="kpi"><div class="kpi-head"><div class="kpi-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg></div><div class="kpi-label">Prazos no horizonte</div></div><div class="kpi-mid"><div class="kpi-num gold">23</div></div><div class="kpi-foot"><canvas class="kpi-spark" data-spark="18,19,20,21,21,21,21" data-color="gold"></canvas><div class="kpi-sub">01.06 → 30.06<br>todos a concluir</div></div></div>
+        <div class="kpi"><div class="kpi-head"><div class="kpi-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div><div class="kpi-label">Tarefas ativas</div></div><div class="kpi-mid"><div class="kpi-num gold">18</div></div><div class="kpi-foot"><canvas class="kpi-spark" data-spark="14,16,15,17,16,17,18" data-color="gold"></canvas><div class="kpi-sub">em execução</div></div></div>
+        <div class="kpi"><div class="kpi-head"><div class="kpi-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="kpi-label">Audiências agendadas</div></div><div class="kpi-mid"><div class="kpi-num gold">05</div></div><div class="kpi-foot"><canvas class="kpi-spark" data-spark="3,4,4,5,5,5,5" data-color="gold"></canvas><div class="kpi-sub">18.05 → 19.06</div></div></div>
+        <div class="kpi"><div class="kpi-head"><div class="kpi-icon icon-warn"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div><div class="kpi-label">Publicações a tratar</div></div><div class="kpi-mid"><div class="kpi-num warn">2</div></div><div class="kpi-foot"><canvas class="kpi-spark" data-spark="8,7,6,5,4,5,5" data-color="warn"></canvas><div class="kpi-sub">13 tratadas hoje</div></div></div>
+      </div>
+
+      <div class="kpi-grid grid-cols-3">
+        <div class="kpi"><div class="kpi-head"><div class="kpi-icon icon-ok"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="kpi-label">Prazos cumpridos hoje</div></div><div class="kpi-mid"><div class="kpi-num ok">03</div><span class="kpi-delta up">100%</span></div><div class="kpi-foot"><canvas class="kpi-spark" data-spark="2,3,1,2,3,2,3" data-color="ok"></canvas><div class="kpi-sub">sem atrasos</div></div></div>
+        <div class="kpi"><div class="kpi-head"><div class="kpi-icon icon-danger"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="kpi-label">Prazos em 3 dias</div></div><div class="kpi-mid"><div class="kpi-num danger">03</div></div><div class="kpi-foot"><canvas class="kpi-spark" data-spark="0,1,2,2,3,3,3" data-color="danger"></canvas><div class="kpi-sub">segunda 18.05</div></div></div>
+        <div class="kpi"><div class="kpi-head"><div class="kpi-icon icon-ok"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div class="kpi-label">Tarefas c/ movimento recente</div></div><div class="kpi-mid"><div class="kpi-num ok">16<span class="unit"> / 18</span></div></div><div class="kpi-foot"><canvas class="kpi-spark" data-spark="14,15,15,16,16,16,16" data-color="ok"></canvas><div class="kpi-sub">≤ 2 dias</div></div></div>
+      </div>
+
+      <div class="next-event">
+        <div class="ev-eyebrow">Próxima audiência · em 3 dias</div>
+        <div class="ev-title">Segunda 18.05 · 15h30 · Audiência presencial</div>
+        <div class="ev-desc">Ester Lara × FQ Games Ltda · Processo 4069772-02.2025.8.26.0100</div>
+      </div>
+
+      <div class="panels-grid grid-cols-2">
+        <div class="panel">
+          <div class="panel-title">Distribuição dos 21 Prazos</div>
+          <div class="big-donut">
+            <canvas id="commonDonut"></canvas>
+            <div class="big-donut-center">
+              <div class="big-donut-value">21</div>
+              <div class="big-donut-label">Prazos no horizonte</div>
+              <div class="big-donut-sub">01.06 → 30.06</div>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Status de Movimentação · 18 Tarefas</div>
+          <div class="bar-list" style="margin-top:8px">
+            <div class="bar-list-item"><div class="name">OK · ≤ 2 dias</div><div class="track"><div class="fill ok" style="width:89%"></div></div><div class="value ok">16</div></div>
+            <div class="bar-list-item"><div class="name">Médio · 3 dias</div><div class="track"><div class="fill warn" style="width:11%"></div></div><div class="value warn">2</div></div>
+            <div class="bar-list-item"><div class="name">Atenção · 4-5+ dias</div><div class="track"></div><div class="value" style="color:var(--text-faint)">0</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panels-grid grid-cols-2">
+        <div class="panel" style="padding:0">
+          <div style="padding:20px 28px;border-bottom:1px solid var(--line)"><div class="panel-title" style="margin:0">Próximos Prazos Processuais</div></div>
+          <div class="table-wrap"><table><thead><tr><th>Data</th><th>Dia</th><th>Título</th><th>Status</th></tr></thead><tbody id="commonTabelaPrazos"></tbody></table></div>
+        </div>
+        <div class="panel" style="padding:0">
+          <div style="padding:20px 28px;border-bottom:1px solid var(--line)"><div class="panel-title" style="margin:0">Audiências · Até 30.06</div></div>
+          <div class="table-wrap"><table><thead><tr><th>Data</th><th>Hora</th><th>Tipo</th><th>Processo</th></tr></thead><tbody id="commonTabelaAudiencias"></tbody></table></div>
+        </div>
+      </div>
+
+      <div class="alert">
+        <div class="alert-title">Status da Equipe · hoje 01.06</div>
+        <div class="alert-body">Equipe operacional ativa · <strong style="color:var(--gold-soft)">13 publicações tratadas hoje</strong> · <strong style="color:var(--gold-soft)">7 colaboradores ativos no WorkMonitor</strong> · 2 audiências hoje. Nenhuma tarefa em estado de atenção.</div>
+      </div>
+
+    </div>
+
+    <footer class="main-footer">
+      <div><span class="gold">PULSE</span> · Panorama da Equipe · <span class="gold">v04</span></div>
+      <div>Visão consolidada · sem detalhamento individual</div>
+    </footer>
+  </div>
+</div>
+
+<script>
+// ===================================================================
+// ====== CONFIGURAÇÃO GOOGLE SHEETS ==================================
+// ===================================================================
+// Cole aqui o ID da planilha Google Sheets (veja INSTRUCOES_GOOGLE_SHEETS.md)
+// Se deixar 'COLE_O_ID_AQUI' o dashboard funciona em MODO DEMO com dados embutidos.
+const SHEETS_ID = ''; // teste 29.05: modo embutido (dados reescritos pelo robo)
+// Atualização automática a cada N minutos. 0 = só atualiza ao recarregar.
+const AUTO_REFRESH_MINUTES = 0;
+// ===================================================================
+
+// flag de status da conexão · usado pra mostrar indicador
+let SHEETS_STATUS = 'demo'; // 'demo' | 'connected' | 'error'
+let LAST_FETCH_TIME = null;
+
+// Busca uma aba da planilha via API gviz pública do Google.
+async function fetchSheet(sheetName) {
+  const url = `https://docs.google.com/spreadsheets/d/${SHEETS_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
+  const resp = await fetch(url);
+  if (!resp.ok) throw new Error('HTTP ' + resp.status);
+  const text = await resp.text();
+  // Google envolve em /*O_o*/\ngoogle.visualization.Query.setResponse(...)
+  const start = text.indexOf('{');
+  const end = text.lastIndexOf('}');
+  if (start < 0 || end < 0) throw new Error('Resposta inválida');
+  const json = JSON.parse(text.substring(start, end + 1));
+  if (json.status !== 'ok') throw new Error('Status: ' + json.status);
+  return rowsToObjects(json.table);
+}
+
+function rowsToObjects(table) {
+  if (!table || !table.cols || !table.rows) return [];
+  const headers = table.cols.map(c => (c.label || c.id || '').trim());
+  return table.rows.map(r => {
+    const obj = {};
+    headers.forEach((h, i) => {
+      if (!h) return;
+      const cell = r.c ? r.c[i] : null;
+      if (!cell) { obj[h] = ''; return; }
+      const v = cell.v;
+      // Boolean Sheets vem como bool. Number vem como number. Date vem como string já.
+      obj[h] = (v === null || v === undefined) ? '' : v;
+    });
+    return obj;
+  });
+}
+
+// Tenta buscar TODAS as abas. Se SHEETS_ID estiver vazio ou der erro, mantém os dados demo.
+async function loadFromSheets() {
+  if (!SHEETS_ID || SHEETS_ID === 'COLE_O_ID_AQUI') {
+    SHEETS_STATUS = 'demo';
+    return false;
+  }
+  try {
+    const [p, a, pub, wm, par, rk] = await Promise.all([
+      fetchSheet('prazos'),
+      fetchSheet('audiencias'),
+      fetchSheet('publicacoes'),
+      fetchSheet('workmonitor'),
+      fetchSheet('paradas'),
+      fetchSheet('ranking')
+    ]);
+    if (p.length) prazos.length = 0, prazos.push(...p);
+    if (a.length) audiencias.length = 0, audiencias.push(...a);
+    if (pub.length) publicacoes.length = 0, publicacoes.push(...pub);
+    if (wm.length) {
+      workmonitor.length = 0;
+      workmonitor.push(...wm.map(r => ({
+        nome: r.nome, aprov: Number(r.aprov)||0, captadas: Number(r.captadas)||0,
+        produtivas: Number(r.produtivas)||0, neutras: Number(r.neutras)||0,
+        ocio: Number(r.ocio)||0, score: Number(r.score)||0,
+        ativo: r.ativo === true || r.ativo === 'TRUE' || r.ativo === 'true' || r.ativo === 1
+      })));
+    }
+    if (par.length) tarefasParadas.length = 0, tarefasParadas.push(...par.map(r => ({
+      ...r,
+      dias: Number(r.dias)||0,
+      feito: r.feito === true || r.feito === 'TRUE' || r.feito === 'true' || r.feito === 1 || r.feito === '1'
+    })));
+    if (rk.length) ranking.length = 0, ranking.push(...rk);
+    SHEETS_STATUS = 'connected';
+    LAST_FETCH_TIME = new Date();
+    return true;
+  } catch (e) {
+    console.error('Erro ao buscar Google Sheets:', e);
+    SHEETS_STATUS = 'error';
+    return false;
+  }
+}
+
+function renderConnectionBadge() {
+  const time = LAST_FETCH_TIME ? LAST_FETCH_TIME.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}) : '—';
+  let cls, html;
+  if (SHEETS_STATUS === 'connected') {
+    cls = 'sheets-badge connected';
+    html = `<span class="dot"></span>Conectado · ${time}`;
+  } else if (SHEETS_STATUS === 'error') {
+    cls = 'sheets-badge error';
+    html = `<span class="dot"></span>Erro · usando demo`;
+  } else {
+    cls = 'sheets-badge demo';
+    html = `<span class="dot"></span>Modo demo`;
+  }
+  ['sheetsBadgeMaster','sheetsBadgeCommon'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.className = cls; el.innerHTML = html; }
+  });
+}
+
+// Auto-refresh opcional
+if (AUTO_REFRESH_MINUTES > 0) {
+  setInterval(async () => {
+    if (await loadFromSheets()) {
+      // re-renderiza tabelas/charts com novos dados
+      chartsInitialized = {master: false, common: false};
+      applySession();
+    }
+  }, AUTO_REFRESH_MINUTES * 60 * 1000);
+}
+
+// ====== VIEW TOGGLE (Master/Comum, sem senha) ======
+let chartsInitialized = {master: false, common: false};
+
+function toggleView() {
+  const current = localStorage.getItem('pulse_view') || 'master';
+  const next = current === 'master' ? 'common' : 'master';
+  localStorage.setItem('pulse_view', next);
+  applyView();
+}
+
+function applyView() {
+  const view = localStorage.getItem('pulse_view') || 'master';
+  const masterEl = document.getElementById('master-app');
+  const commonEl = document.getElementById('common-app');
+  if (view === 'master') {
+    masterEl.style.display = 'block'; commonEl.style.display = 'none';
+    if (!chartsInitialized.master) { initMaster(); chartsInitialized.master = true; }
+  } else {
+    masterEl.style.display = 'none'; commonEl.style.display = 'block';
+    if (!chartsInitialized.common) { initCommon(); chartsInitialized.common = true; }
+  }
+  // atualiza nomes nos cabeçalhos (opcional)
+  const masterUser = document.getElementById('masterUserName');
+  const commonUser = document.getElementById('commonUserName');
+  if (masterUser) masterUser.textContent = 'Vista Completa';
+  if (commonUser) commonUser.textContent = 'Vista Equipe';
+}
+
+// compatibilidade com chamadas antigas
+const applySession = applyView;
+
+function showTab(t, el) {
+  document.querySelectorAll('#master-app .section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('#master-app .sb-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('section-'+t).classList.add('active');
+  el.classList.add('active');
+  const titles = {exec:['I · Visão Executiva','Pulso operacional'],prazos:['II · Prazos','Controle de prazos processuais'],produtividade:['III · Produtividade','WorkMonitor · monitoramento'],equipe:['IV · Equipe','Ranking de desenvolvimento'],colaborador:['V · Colaborador','Análise individual'],agenda:['VI · Agenda','Audiências e publicações'],paradas:['VII · Tarefas paradas','Análise de movimentação']};
+  document.getElementById('masterEyebrow').textContent = titles[t][0];
+  document.getElementById('masterTitle').textContent = titles[t][1];
+  setTimeout(() => window.dispatchEvent(new Event('resize')), 50);
+}
+
+// ====== DATA ======
+const prazos = [
+  {data:"01.06", dia:"Seg", titulo:"Apresentar procuracao - Antonio Carlos", processo:"Antonio C.R. Sousa x PrincipiaPay", status:"3 dias"},
+  {data:"01.06", dia:"Seg", titulo:"Baixa Prefeitura - Clean Stay", processo:"Clean Stay Service Tecnology Ltda", status:"3 dias"},
+  {data:"01.06", dia:"Seg", titulo:"Manifestacao - Orlandi x Fazenda", processo:"Comercial Orlandi x Uniao Federal", status:"3 dias"},
+  {data:"03.06", dia:"Qua", titulo:"Manifestacao aos embargos - Ester Lara", processo:"Ester Lara x Notre Dame Intermedica", status:"3 dias"},
+  {data:"04.06", dia:"Qui", titulo:"Contrarrazoes - Habeas Corpus", processo:"Danilo x TRF1 - Agravo Interno", status:"3 dias"},
+  {data:"04.06", dia:"Qui", titulo:"Pedido de desarquivamento - Espolio Jorge Luiz", processo:"Jorge Luiz Emilio x Jessica Emilio", status:"3 dias"},
+  {data:"05.06", dia:"Sex", titulo:"Avisar a cliente - Priscila x 4MS", processo:"Priscilla Dona x 4MS Negocios Imob.", status:"3 dias"},
+  {data:"05.06", dia:"Sex", titulo:"Manifestacao - Orlandi (ICMS)", processo:"Comercial Orlandi x Fazenda Publica", status:"3 dias"},
+  {data:"05.06", dia:"Sex", titulo:"Protocolar habilitacao - Michi House", processo:"Nomadeh (Michi House) x Meiriane e Pedro", status:"3 dias"},
+  {data:"10.06", dia:"Qua", titulo:"Recurso de apelacao - Douglas Mota", processo:"Douglas Mota x Dp Car Servicos", status:"A concluir"},
+  {data:"11.06", dia:"Qui", titulo:"Analise de sentenca - Danilo x Itau", processo:"Danilo Fiorini x Itau Unibanco", status:"A concluir"},
+  {data:"11.06", dia:"Qui", titulo:"Custas de citacao - Luciana Pepe", processo:"Porto Seguro x Luciana Pepe Goz", status:"A concluir"},
+  {data:"12.06", dia:"Sex", titulo:"Analisar sentenca e deposito", processo:"Bradesco Cartoes x Andreia Maximiano", status:"A concluir"},
+  {data:"12.06", dia:"Sex", titulo:"Analise de nova acao", processo:"Neuseed Brasil x Sergio Barao - Trab.", status:"A concluir"},
+  {data:"12.06", dia:"Sex", titulo:"Manifestacao - Laudo - Rochner", processo:"Rochner x Brenda Mateus Formiga", status:"A concluir"},
+  {data:"12.06", dia:"Sex", titulo:"Manifestacao - Reinaldo (Rochner)", processo:"Rochner x Leticia Lacerda - Rec. Ordinario", status:"A concluir"},
+  {data:"15.06", dia:"Seg", titulo:"Regularizacao processual", processo:"Estado de Goias x Xis 1 Internet", status:"A concluir"},
+  {data:"16.06", dia:"Ter", titulo:"Manifestacao - Laudo - Vinicius", processo:"Vinicius de Souza x CBC Cartuchos", status:"A concluir"},
+  {data:"17.06", dia:"Qua", titulo:"Analise de sentenca - Andrea x Bradesco", processo:"Bradesco Cartoes x Andreia Maximiano", status:"A concluir"},
+  {data:"17.06", dia:"Qua", titulo:"Embargos - TAE", processo:"Tae Young Han x Baluma", status:"A concluir"},
+  {data:"17.06", dia:"Qua", titulo:"Manifestacao carta precatoria - Joao Vitor", processo:"Joao Vitor Maximiano x Generali", status:"A concluir"},
+  {data:"17.06", dia:"Qua", titulo:"Recolhimento de custas - 6M", processo:"Mario M. Kussano x 6M Participacoes", status:"A concluir"},
+  {data:"17.06", dia:"Qua", titulo:"Recolhimento de custas - Leonardo Jeremias", processo:"Leonardo Jeremias x Porto Seguro", status:"A concluir"},
+];
+
+const audiencias = [
+  {data:"03.06", dia:"Qua", hora:"15h00", tipo:"Reuniao ANPP", processo:"MP-GO x Joao Vitor (Grupo Titan)"},
+  {data:"19.06", dia:"Sex", hora:"11h20", tipo:"Instrucao", processo:"Vinicius de Souza x CBC Cartuchos"},
+];
+
+const publicacoes = [
+  {data:"01.06", processo:"Jhionny Lucas x Xis 3 Provedores", resp:"Giuliano", status:"pendente"},
+  {data:"01.06", processo:"Jhionny Lucas x Xis 3 Provedores", resp:"Giuliano", status:"pendente"},
+];
+
+const workmonitor = [
+  {nome:"Giovanna Pires", aprov:55.0, captadas:4.38, produtivas:4.38, neutras:0.0, ocio:3.6, score:92.63, ativo:true},
+  {nome:"Juliana Gonzales", aprov:60.0, captadas:4.75, produtivas:4.23, neutras:0.52, ocio:3.23, score:66.03, ativo:true},
+  {nome:"Guilherme C.", aprov:78.0, captadas:4.3, produtivas:3.97, neutras:0.33, ocio:1.18, score:53.35, ativo:true},
+  {nome:"Giuliano Zan", aprov:44.0, captadas:3.48, produtivas:3.37, neutras:0.1, ocio:4.5, score:41.57, ativo:true},
+  {nome:"Erick Constancio", aprov:28.0, captadas:2.22, produtivas:2.0, neutras:0.2, ocio:5.77, score:19.78, ativo:true},
+  {nome:"Nicolle Gura", aprov:18.0, captadas:0.72, produtivas:0.72, neutras:0.0, ocio:3.27, score:11.52, ativo:true},
+  {nome:"Marcia Nilander", aprov:4.0, captadas:0.33, produtivas:0.33, neutras:0.0, ocio:7.65, score:3.47, ativo:true},
+];
+
+const tarefasParadas = [
+  {feito:true,  titulo:"Inventario extrajudicial - Acompanhamento", resp:"Guilherme", pf:"01.06", ultimo:"01.06", obs:"HOJE - 36 com."},
+  {feito:true,  titulo:"Licenciamento - Clayton Cacilha", resp:"Guilherme", pf:"01.06", ultimo:"01.06", obs:"62 comentarios"},
+  {feito:false, titulo:"Relatorio mensal - RYCO", resp:"Guilherme", pf:"15.06", ultimo:"01.06", obs:"60 comentarios"},
+  {feito:true,  titulo:"Inventario extrajudicial - Jessica", resp:"Giovanna", pf:"02.06", ultimo:"01.06", obs:"30 comentarios"},
+  {feito:false, titulo:"Relatorio mensal - Michi House", resp:"Guilherme", pf:"15.06", ultimo:"01.06", obs:"22 comentarios"},
+  {feito:false, titulo:"Emenda inicial - Cemiterio M.S.", resp:"Nicolle", pf:"18.06", ultimo:"01.06", obs:"15 comentarios"},
+  {feito:true,  titulo:"Manifestacao - Orlandi (PF 28/05)", resp:"Giovanna", pf:"01.06", ultimo:"01.06", obs:"HOJE - 15 com."},
+  {feito:false, titulo:"Nao incidencia ITBI - Madrid", resp:"Giovanna", pf:"01.06", ultimo:"01.06", obs:"14 comentarios"},
+  {feito:false, titulo:"Recurso de apelacao - Douglas Mota", resp:"Guilherme", pf:"08.06", ultimo:"01.06", obs:"12 comentarios"},
+  {feito:false, titulo:"Manifestacao Rochner - Leticia", resp:"Guilherme", pf:"11.06", ultimo:"01.06", obs:"9 comentarios"},
+];
+
+const ranking = [
+  {pos:"01", nome:"Giovanna Pires", funcao:"Controller", classe:"Baseline", tarefas:"-", prazos:"-", aprov:"55,0%", score:"92,63", obs:"Maior score WM do dia"},
+  {pos:"02", nome:"Juliana Gonzales", funcao:"Coordenadora", classe:"Executor", tarefas:"-", prazos:"-", aprov:"60,0%", score:"66,03", obs:"Boa jornada e captacao"},
+  {pos:"03", nome:"Guilherme C.", funcao:"Colaborador", classe:"Executor", tarefas:"-", prazos:"-", aprov:"78,0%", score:"53,35", obs:"Maior jornada do dia"},
+  {pos:"04", nome:"Giuliano Zan", funcao:"Head Tec.", classe:"Baseline", tarefas:"-", prazos:"-", aprov:"44,0%", score:"41,57", obs:"Volume de pecas tecnicas"},
+  {pos:"05", nome:"Erick Constancio", funcao:"Marketing", classe:"Marketing", tarefas:"-", prazos:"-", aprov:"28,0%", score:"19,78", obs:"Fora de Astrea"},
+  {pos:"06", nome:"Nicolle Gura", funcao:"Colaboradora", classe:"Executor", tarefas:"-", prazos:"-", aprov:"18,0%", score:"11,52", obs:"Jornada parcial (4h)"},
+  {pos:"07", nome:"Marcia Nilander", funcao:"Coordenadora", classe:"Executor", tarefas:"-", prazos:"-", aprov:"4,0%", score:"3,47", obs:"Jornada baixa - verificar"},
+  {pos:"08", nome:"Pedro Benevenuto", funcao:"Adv. Autonomia", classe:"Executor", tarefas:"-", prazos:"-", aprov:"-", score:"-", obs:"Fiscal - IR - societario"},
+  {pos:"09", nome:"Felipe Ramos", funcao:"CEO", classe:"Baseline", tarefas:"-", prazos:"-", aprov:"-", score:"-", obs:"Visibilidade total"},
+];
+
+// ====== CHART SETUP ======
+const GOLD='#aa843d', GOLD_LIGHT='#c9a961', GOLD_DEEP='#7a5e2b';
+const OK='#7ba776', WARN='#c9a961', DANGER='#b8615a', INFO='#7a8fa6';
+const TEXT='#e6e4e9', MUTE='#8a8a8a', GRID='rgba(170,132,61,.08)';
+
+Chart.defaults.color = MUTE;
+Chart.defaults.font.family = "'Montserrat', system-ui, sans-serif";
+Chart.defaults.font.weight = 400;
+Chart.defaults.font.size = 10;
+
+function statusBadge(s) {
+  if (s.includes("Concluído")) return '<span class="badge badge-ok">Concluído</span>';
+  if (s.includes("3 dias")) return '<span class="badge badge-danger">3 dias</span>';
+  return '<span class="badge badge-info">A concluir</span>';
+}
+function rowClass(s) {
+  if (s.includes("Concluído")) return "row-concluido";
+  if (s.includes("3 dias")) return "row-alta";
+  return "";
+}
+function classBadge(c) {
+  if (c === "Baseline") return '<span class="badge badge-info">Baseline</span>';
+  if (c === "Executor") return '<span class="badge badge-gold">Executor</span>';
+  if (c === "Marketing") return '<span class="badge badge-warn">Marketing</span>';
+  return c;
+}
+
+// ====== AGENDA DE ATUALIZAÇÃO POWER BI · 07h · 13h · 17h ======
+const REFRESH_HOURS = [7, 13, 17];
+function renderRefresh(timesId, statusId) {
+  const now = new Date();
+  const h = now.getHours();
+  const m = now.getMinutes();
+  const timesEl = document.getElementById(timesId);
+  if (!timesEl) return;
+  const slots = timesEl.querySelectorAll('.sb-refresh-time');
+  // marca cada slot
+  REFRESH_HOURS.forEach((hr, i) => {
+    slots[i].classList.remove('done','next');
+    if (hr < h) slots[i].classList.add('done');
+  });
+  // próximo = primeiro >= agora (ou primeiro de amanhã)
+  let next = REFRESH_HOURS.find(hr => hr > h);
+  let nextLabel, lastLabel;
+  if (next !== undefined) {
+    const idx = REFRESH_HOURS.indexOf(next);
+    slots[idx].classList.add('next');
+    nextLabel = `Hoje · ${String(next).padStart(2,'0')}h`;
+  } else {
+    nextLabel = `Amanhã · ${String(REFRESH_HOURS[0]).padStart(2,'0')}h`;
+  }
+  // última = última < ou == h
+  const past = REFRESH_HOURS.filter(hr => hr <= h);
+  if (past.length > 0) {
+    lastLabel = `Hoje · ${String(past[past.length-1]).padStart(2,'0')}h`;
+  } else {
+    lastLabel = `Ontem · ${String(REFRESH_HOURS[REFRESH_HOURS.length-1]).padStart(2,'0')}h`;
+  }
+  document.getElementById(statusId).innerHTML =
+    `Última: <strong>${lastLabel}</strong><br>Próxima: <strong>${nextLabel}</strong>`;
+}
+
+function renderTicker(elId) {
+  const now = new Date();
+  const h = now.getHours();
+  let nextRefresh = REFRESH_HOURS.find(hr => hr > h);
+  const refreshTxt = nextRefresh !== undefined
+    ? `Próxima atualização Power BI · <strong>Hoje ${String(nextRefresh).padStart(2,'0')}h</strong>`
+    : `Próxima atualização Power BI · <strong>Amanhã ${String(REFRESH_HOURS[0]).padStart(2,'0')}h</strong>`;
+  const items = [
+    `<span class="ticker-item">${refreshTxt}</span>`,
+    `<span class="ticker-item">Snapshot · <strong>01.06.2026</strong> · Sexta-feira</span>`,
+    `<span class="ticker-item">Produtividade equipe · <strong class="up">70%</strong> média WM</span>`,
+    `<span class="ticker-item">Vence em 3 dias · <strong class="down">3 prazos</strong> · Segunda 18.05</span>`,
+    `<span class="ticker-item">Horizonte · <strong>23 prazos</strong> até 30.06</span>`,
+    `<span class="ticker-item">Tarefas ativas · <strong>18</strong> em execução</span>`,
+    `<span class="ticker-item">Movimento recente · <strong class="up">16 de 18</strong> tarefas (≤2d)</span>`,
+    `<span class="ticker-item">Aproveitamento WM · <strong class="down">40,5%</strong> · ▼ 19,2pp vs 28.04</span>`,
+    `<span class="ticker-item">Próxima audiência · <strong>Seg 18.05 · 15h30</strong> · Ester Lara × FQ Games</span>`,
+    `<span class="ticker-item">Audiências até 30.06 · <strong>5 agendadas</strong></span>`,
+    `<span class="ticker-item">Publicações · <strong class="warn">2 pendente(s)</strong> · 13 tratadas hoje</span>`,
+    `<span class="ticker-item">Taxa cumprimento prazo · <strong class="up">95%</strong> no mês</span>`,
+    `<span class="ticker-item">Score TOP · <strong>Marcia Nilander · 48,29</strong></span>`,
+  ];
+  // duplica pra loop seamless (CSS anima -50% que equivale a uma cópia)
+  document.getElementById(elId).innerHTML = items.join('') + items.join('');
+}
+
+function drawSparklines(scope) {
+  scope.querySelectorAll('.kpi-spark').forEach(canvas => {
+    const dataAttr = canvas.dataset.spark;
+    const colorKey = canvas.dataset.color;
+    if (!dataAttr || canvas.dataset.rendered) return;
+    canvas.dataset.rendered = '1';
+    // Envolve canvas em wrapper de altura fixa pra evitar "derretimento" do Chart.js
+    if (!canvas.parentElement.classList.contains('kpi-spark-wrap')) {
+      const wrap = document.createElement('div');
+      wrap.className = 'kpi-spark-wrap';
+      canvas.parentNode.insertBefore(wrap, canvas);
+      wrap.appendChild(canvas);
+    }
+    const data = dataAttr.split(',').map(Number);
+    const colorMap = {ok:OK, gold:GOLD_LIGHT, warn:WARN, danger:DANGER, mute:'#444'};
+    const c = colorMap[colorKey] || GOLD_LIGHT;
+    new Chart(canvas, {
+      type: 'line',
+      data: { labels: data.map((_,i)=>i), datasets:[{data, borderColor:c, borderWidth:1.5, pointRadius:0, tension:0.35, fill:true, backgroundColor:c+'18'}] },
+      options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false},tooltip:{enabled:false}}, scales:{x:{display:false},y:{display:false}}, animation:{duration:400} }
+    });
+  });
+}
+
+function bigDonutOpts(onClickFn) {
+  const opts = {
+    plugins: { legend:{display:false}, tooltip:{enabled:false} },
+    cutout: '78%',
+    rotation: -90,
+    animation: { animateRotate: true, duration: 800 },
+    onHover: (event, elements) => {
+      if (event.native && event.native.target) {
+        event.native.target.style.cursor = elements.length > 0 ? 'pointer' : 'default';
+      }
+    }
+  };
+  if (onClickFn) {
+    opts.onClick = (event, elements, chart) => {
+      if (elements.length === 0) return;
+      onClickFn(elements[0].index, chart);
+    };
+  }
+  return opts;
+}
+
+// ====== NAVEGAÇÃO ENTRE ABAS (drill-down) ======
+function goToTab(tabId) {
+  const tabEl = document.querySelector(`#master-app .sb-tab[onclick*="${tabId}"]`);
+  if (tabEl) showTab(tabId, tabEl);
+}
+
+function drillBigDonut(idx) {
+  // 0 = Cumpridos (filtra Concluído), 1 = Em aberto (filtra A concluir)
+  goToTab('prazos');
+  const newFilter = idx === 0 ? 'concluido' : 'aconcluir';
+  // toggle: se já está com esse filtro, volta pra 'all'
+  prazoFilter = (prazoFilter === newFilter) ? 'all' : newFilter;
+  document.querySelectorAll('[data-prazo-filter]').forEach(b => {
+    b.classList.toggle('active', b.dataset.prazoFilter === prazoFilter);
+  });
+  setTimeout(() => renderPrazosTable(), 50);
+}
+
+// filtro de paradas (Feitas/Pendentes)
+let paradaFilter = 'all'; // 'all' | 'feito' | 'pendente'
+function drillParadaDonut(idx) {
+  // 0 = Feitas, 1 = Pendentes · toggle
+  const newFilter = idx === 0 ? 'feito' : 'pendente';
+  paradaFilter = (paradaFilter === newFilter) ? 'all' : newFilter;
+  renderParadasTable();
+}
+
+// ====== PRAZOS · FILTRO E ORDENAÇÃO ======
+let prazoFilter = 'all';
+let prazoSort = 'data-asc';
+
+function parsePrazoDate(d) {
+  if (!d) return 99999;
+  const parts = d.split('.');
+  if (parts.length < 2) return 99999;
+  const day = Number(parts[0]) || 0;
+  const month = Number(parts[1]) || 0;
+  return month * 100 + day;
+}
+
+function matchPrazoFilter(p, filter) {
+  const s = (p.status || '').toLowerCase();
+  if (filter === 'all') return true;
+  if (filter === 'concluido') return s.includes('conclu');
+  if (filter === '3dias') return s.includes('3 dias');
+  if (filter === 'aconcluir') return s.includes('a concluir');
+  return true;
+}
+
+function renderPrazosTable() {
+  let list = prazos.filter(p => matchPrazoFilter(p, prazoFilter));
+  if (prazoSort === 'az') list.sort((a,b) => a.titulo.localeCompare(b.titulo));
+  else if (prazoSort === 'za') list.sort((a,b) => b.titulo.localeCompare(a.titulo));
+  else if (prazoSort === 'data-asc') list.sort((a,b) => parsePrazoDate(a.data) - parsePrazoDate(b.data));
+  else if (prazoSort === 'data-desc') list.sort((a,b) => parsePrazoDate(b.data) - parsePrazoDate(a.data));
+
+  const tbody = document.getElementById('tabelaPrazos');
+  if (!tbody) return;
+  tbody.innerHTML = list.map(p => `
+    <tr class="${rowClass(p.status)}">
+      <td class="num-cell">${p.data}</td>
+      <td class="mute">${p.dia}</td>
+      <td><div style="color:var(--text);font-weight:500">${p.titulo}</div></td>
+      <td class="mute">${p.processo}</td>
+      <td>${statusBadge(p.status)}</td>
+    </tr>`).join('');
+
+  // atualiza KPIs (contagem por status)
+  const total = prazos.length;
+  const concluidos = prazos.filter(p => matchPrazoFilter(p, 'concluido')).length;
+  const tresDias = prazos.filter(p => matchPrazoFilter(p, '3dias')).length;
+  const aConcluir = prazos.filter(p => matchPrazoFilter(p, 'aconcluir')).length;
+  const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = String(val).padStart(2,'0'); };
+  setText('prazoKpiConcluidos', concluidos);
+  setText('prazoKpi3dias', tresDias);
+  setText('prazoKpiAconcluir', aConcluir);
+  setText('prazoKpiTotal', total);
+
+  // highlight card ativo
+  document.querySelectorAll('.prazos-filter-card').forEach(c => {
+    if (c.dataset.filter === prazoFilter) c.classList.add('filtered');
+    else c.classList.remove('filtered');
+  });
+}
+
+function setupPrazosFilter() {
+  // chips
+  document.querySelectorAll('[data-prazo-filter]').forEach(btn => {
+    if (btn._bound) return;
+    btn._bound = true;
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-prazo-filter]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      prazoFilter = btn.dataset.prazoFilter;
+      renderPrazosTable();
+    });
+  });
+  // cards clicáveis (filtram)
+  document.querySelectorAll('.prazos-filter-card').forEach(card => {
+    if (card._bound) return;
+    card._bound = true;
+    card.addEventListener('click', () => {
+      prazoFilter = card.dataset.filter;
+      document.querySelectorAll('[data-prazo-filter]').forEach(b => {
+        b.classList.toggle('active', b.dataset.prazoFilter === prazoFilter);
+      });
+      renderPrazosTable();
+    });
+  });
+  // dropdown ordem
+  const sort = document.getElementById('prazoSort');
+  if (sort && !sort._bound) {
+    sort._bound = true;
+    sort.addEventListener('change', e => {
+      prazoSort = e.target.value;
+      renderPrazosTable();
+    });
+  }
+  renderPrazosTable();
+}
+
+// ====== MASTER INIT ======
+function initMaster() {
+  renderTicker('masterTicker');
+  renderRefresh('masterRefreshTimes','masterRefreshStatus');
+  renderConnectionBadge();
+  // tables
+  setupPrazosFilter(); // bind filtros + render inicial
+  setupColaboradorPage(); // dropdown + render lazy
+
+  document.getElementById('tabelaWorkmonitor').innerHTML = workmonitor.map(w => {
+    if (!w.ativo) return `<tr style="opacity:.35"><td style="font-weight:500">${w.nome}</td><td colspan="6" class="mute" style="text-align:center">Sem atividade hoje</td></tr>`;
+    return `<tr>
+      <td style="font-weight:500">${w.nome}</td>
+      <td class="num-cell">${w.aprov.toFixed(1).replace('.',',')}%</td>
+      <td class="num-cell">${w.captadas.toFixed(2).replace('.',',')}h</td>
+      <td class="num-cell">${w.produtivas.toFixed(2).replace('.',',')}h</td>
+      <td class="num-cell">${w.neutras.toFixed(2).replace('.',',')}h</td>
+      <td class="num-cell">${w.ocio.toFixed(2).replace('.',',')}h</td>
+      <td class="num-cell" style="color:var(--gold)">${w.score.toFixed(2).replace('.',',')}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('tabelaRanking').innerHTML = ranking.map(r => `
+    <tr>
+      <td class="num-cell">${r.pos}</td>
+      <td style="font-weight:500">${r.nome}</td>
+      <td class="mute">${r.funcao}</td>
+      <td>${classBadge(r.classe)}</td>
+      <td class="num-cell">${r.tarefas}</td>
+      <td class="num-cell">${r.prazos}</td>
+      <td class="num-cell">${r.aprov}</td>
+      <td class="num-cell" style="color:var(--gold)">${r.score}</td>
+      <td class="mute">${r.obs}</td>
+    </tr>`).join('');
+
+  document.getElementById('tabelaAudiencias').innerHTML = audiencias.map(a => `
+    <tr>
+      <td class="num-cell">${a.data}<div class="mute" style="font-size:10px;font-weight:400">${a.dia}</div></td>
+      <td class="num-cell" style="color:var(--gold)">${a.hora}</td>
+      <td><div style="font-weight:500">${a.tipo}</div></td>
+      <td class="mute">${a.processo}</td>
+    </tr>`).join('');
+
+  document.getElementById('tabelaPublicacoes').innerHTML = publicacoes.map(p => `
+    <tr ${p.status === 'tratada' ? 'style="opacity:.5"' : ''}>
+      <td class="num-cell">${p.data}</td>
+      <td><div>${p.processo}</div></td>
+      <td class="mute">${p.resp}</td>
+      <td>${p.status === 'tratada' ? '<span class="badge badge-ok">Tratada</span>' : '<span class="badge badge-danger">Pendente</span>'}</td>
+    </tr>`).join('');
+
+  renderParadasTable(); // tabela + KPIs paradas
+
+  // big donut (Taxa Cumprimento) · clicável
+  new Chart(document.getElementById('bigDonut'), {
+    type: 'doughnut',
+    data: { labels:['Cumpridos','Em aberto'], datasets:[{data:[95,5], backgroundColor:[GOLD, '#1f1f1f'], borderWidth:0}]},
+    options: bigDonutOpts(drillBigDonut)
+  });
+
+  // sparklines
+  drawSparklines(document.getElementById('master-app'));
+}
+
+// ====== MODO TV ======
+const TV_ROTATE_SECONDS = 15;     // troca de aba a cada 15s
+const TV_REFRESH_MINUTES = 5;     // recarrega dados a cada 5min
+const TV_TABS = ['exec','prazos','produtividade','equipe','colaborador','agenda','paradas'];
+let tvRotateTimer = null;
+let tvRefreshTimer = null;
+let tvProgressTimer = null;
+let tvTabIdx = 0;
+
+function enterTVMode() {
+  document.body.classList.add('tv-mode');
+  // pede fullscreen
+  const elem = document.documentElement;
+  if (elem.requestFullscreen) elem.requestFullscreen().catch(()=>{});
+  // garante que está em vista master
+  const view = localStorage.getItem('pulse_view') || 'master';
+  if (view !== 'master') {
+    localStorage.setItem('pulse_view', 'master');
+    applyView();
+  }
+  // rotação automática
+  tvTabIdx = 0;
+  rotateTvTab();
+  tvRotateTimer = setInterval(rotateTvTab, TV_ROTATE_SECONDS * 1000);
+  // barra de progresso
+  startTvProgress();
+  // auto-refresh dados
+  tvRefreshTimer = setInterval(async () => {
+    if (typeof loadFromSheets === 'function' && await loadFromSheets()) {
+      chartsInitialized = {master:false, common:false};
+      paradaDonutChart = null;
+      applyView();
+    }
+  }, TV_REFRESH_MINUTES * 60 * 1000);
+}
+
+function rotateTvTab() {
+  const tabId = TV_TABS[tvTabIdx];
+  const el = document.querySelector(`#master-app .sb-tab[onclick*="${tabId}"]`);
+  if (el) showTab(tabId, el);
+  tvTabIdx = (tvTabIdx + 1) % TV_TABS.length;
+  resetTvProgress();
+}
+
+function startTvProgress() {
+  let pct = 0;
+  const step = 100 / (TV_ROTATE_SECONDS * 4); // 4 ticks por segundo
+  if (tvProgressTimer) clearInterval(tvProgressTimer);
+  tvProgressTimer = setInterval(() => {
+    pct += step;
+    if (pct > 100) pct = 0;
+    const bar = document.getElementById('tvProgressBar');
+    if (bar) bar.style.width = pct + '%';
+  }, 250);
+}
+
+function resetTvProgress() {
+  const bar = document.getElementById('tvProgressBar');
+  if (bar) { bar.style.transition = 'none'; bar.style.width = '0%'; setTimeout(() => bar.style.transition = '', 50); }
+}
+
+function exitTVMode() {
+  document.body.classList.remove('tv-mode');
+  if (document.exitFullscreen && document.fullscreenElement) document.exitFullscreen().catch(()=>{});
+  if (tvRotateTimer) { clearInterval(tvRotateTimer); tvRotateTimer = null; }
+  if (tvRefreshTimer) { clearInterval(tvRefreshTimer); tvRefreshTimer = null; }
+  if (tvProgressTimer) { clearInterval(tvProgressTimer); tvProgressTimer = null; }
+  const bar = document.getElementById('tvProgressBar');
+  if (bar) bar.style.width = '0%';
+}
+
+// ESC sai do modo TV
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && document.body.classList.contains('tv-mode')) {
+    exitTVMode();
+  }
+});
+
+// se sair do fullscreen pelo browser, sai do modo TV
+document.addEventListener('fullscreenchange', () => {
+  if (!document.fullscreenElement && document.body.classList.contains('tv-mode')) {
+    exitTVMode();
+  }
+});
+
+// ====== COLABORADOR · análise individual ======
+function normalize(s) {
+  return (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+}
+
+function findColaborador(name) {
+  const n = normalize(name);
+  const first = n.split(' ')[0];
+  const wm = workmonitor.find(w => normalize(w.nome) === n)
+          || workmonitor.find(w => normalize(w.nome).startsWith(first));
+  const rk = ranking.find(r => normalize(r.nome) === n)
+          || ranking.find(r => normalize(r.nome).startsWith(first));
+  // tarefas: o resp na tabela paradas costuma ser só primeiro nome
+  const tarefas = tarefasParadas.filter(t => {
+    const r = normalize(t.resp);
+    return r === first || n.startsWith(r) || r.startsWith(first);
+  });
+  return { wm, rk, tarefas };
+}
+
+function setupColaboradorPage() {
+  const select = document.getElementById('colaboradorSelect');
+  if (!select) return;
+  // Lista única de nomes (workmonitor + ranking)
+  const names = new Set();
+  workmonitor.forEach(w => names.add(w.nome));
+  ranking.forEach(r => names.add(r.nome));
+  select.innerHTML = '<option value="">— Escolha um colaborador —</option>' +
+    [...names].sort().map(n => `<option value="${n.replace(/"/g, '&quot;')}">${n}</option>`).join('');
+  if (!select._bound) {
+    select._bound = true;
+    select.addEventListener('change', e => {
+      const name = e.target.value;
+      if (!name) showColabEmpty(); else renderColaborador(name);
+    });
+  }
+  showColabEmpty();
+}
+
+function showColabEmpty() {
+  const e = document.getElementById('colabEmpty');
+  const c = document.getElementById('colabContent');
+  if (e) e.style.display = 'block';
+  if (c) c.style.display = 'none';
+}
+
+function renderColaborador(name) {
+  const { wm, rk, tarefas } = findColaborador(name);
+  document.getElementById('colabEmpty').style.display = 'none';
+  document.getElementById('colabContent').style.display = 'block';
+
+  // Header
+  const initials = name.split(' ').map(p => p[0]).slice(0,2).join('').toUpperCase();
+  document.getElementById('colabAvatar').textContent = initials;
+  document.getElementById('colabNome').textContent = name;
+  document.getElementById('colabFuncao').textContent = (rk && rk.funcao) || '—';
+  document.getElementById('colabClasseBadge').innerHTML = (rk && rk.classe) ? classBadge(rk.classe) : '<span class="badge badge-info">—</span>';
+  document.getElementById('colabPos').textContent = (rk && rk.pos) || '—';
+  document.getElementById('colabAtivoBadge').innerHTML = wm
+    ? (wm.ativo ? '<span class="badge badge-ok">Ativo WM</span>' : '<span class="badge badge-warn">Sem WM</span>')
+    : '<span class="badge badge-info">Sem registro</span>';
+
+  // KPIs
+  const aprov = wm ? wm.aprov : 0;
+  const score = wm ? wm.score : 0;
+  const captadas = wm ? wm.captadas : 0;
+  document.getElementById('colabAprov').innerHTML = aprov.toFixed(1).replace('.',',') + '<span class="unit">%</span>';
+  document.getElementById('colabScore').textContent = score.toFixed(2).replace('.',',');
+  document.getElementById('colabCaptadas').innerHTML = captadas.toFixed(2).replace('.',',') + '<span class="unit">h</span>';
+  document.getElementById('colabQtdTarefas').textContent = String(tarefas.length).padStart(2,'0');
+
+  // Cor do score (verde se >25, dourado se >5, vermelho se baixo)
+  const scoreEl = document.getElementById('colabScore');
+  scoreEl.className = 'kpi-num ' + (score >= 25 ? 'ok' : score >= 5 ? 'gold' : 'danger');
+  const aprovEl = document.getElementById('colabAprov');
+  aprovEl.className = 'kpi-num ' + (aprov >= 50 ? 'ok' : aprov >= 25 ? 'gold' : 'warn');
+
+  // Distribuição de jornada
+  const horasList = [
+    { name: 'Produtivas', value: wm ? wm.produtivas : 0, cls: 'ok' },
+    { name: 'Neutras', value: wm ? wm.neutras : 0, cls: '' },
+    { name: 'Ócio', value: wm ? wm.ocio : 0, cls: 'danger' },
+  ];
+  const maxH = Math.max(...horasList.map(h => h.value), 1);
+  document.getElementById('colabHorasList').innerHTML = horasList.map(h => `
+    <div class="bar-list-item">
+      <div class="name">${h.name}</div>
+      <div class="track"><div class="fill ${h.cls}" style="width:${(h.value/maxH)*100}%"></div></div>
+      <div class="value ${h.cls}">${h.value.toFixed(2).replace('.',',')}h</div>
+    </div>
+  `).join('');
+
+  // Resumo de tarefas
+  const feitas = tarefas.filter(t => t.feito).length;
+  const pendentes = tarefas.filter(t => !t.feito).length;
+  const maxT = Math.max(feitas, pendentes, 1);
+  document.getElementById('colabTaskSummary').innerHTML = `
+    <div class="bar-list-item">
+      <div class="name">Feitas</div>
+      <div class="track"><div class="fill ok" style="width:${(feitas/maxT)*100}%"></div></div>
+      <div class="value ok">${feitas}</div>
+    </div>
+    <div class="bar-list-item">
+      <div class="name">Pendentes</div>
+      <div class="track"><div class="fill warn" style="width:${(pendentes/maxT)*100}%"></div></div>
+      <div class="value warn">${pendentes}</div>
+    </div>
+    <div class="bar-list-item">
+      <div class="name">Total atribuídas</div>
+      <div class="track"><div class="fill" style="width:100%"></div></div>
+      <div class="value">${tarefas.length}</div>
+    </div>
+  `;
+
+  // Tabela de tarefas individuais
+  document.getElementById('tabelaColabTasks').innerHTML = tarefas.length > 0
+    ? tarefas.map(t => {
+        const badge = t.feito ? 'badge-ok' : 'badge-warn';
+        const label = t.feito ? 'Feito' : 'Pendente';
+        const rowCls = t.feito ? 'row-concluido' : '';
+        return `<tr class="${rowCls}">
+          <td><span class="badge ${badge}">${label}</span></td>
+          <td><div style="color:var(--text);font-weight:500">${t.titulo}</div></td>
+          <td class="num-cell">${t.pf}</td>
+          <td class="num-cell">${t.ultimo}</td>
+          <td class="mute">${t.obs}</td>
+        </tr>`;
+      }).join('')
+    : '<tr><td colspan="5" style="text-align:center;padding:32px;color:var(--text-faint)">Nenhuma tarefa registrada para este colaborador</td></tr>';
+}
+
+// ====== RENDER PARADAS (tabela + KPIs + donut + bar list) ======
+let paradaDonutChart = null;
+function renderParadasTable() {
+  // aplica filtro
+  let list = tarefasParadas;
+  if (paradaFilter === 'feito') list = tarefasParadas.filter(t => t.feito);
+  else if (paradaFilter === 'pendente') list = tarefasParadas.filter(t => !t.feito);
+
+  // tabela
+  const tbody = document.getElementById('tabelaParadas');
+  if (tbody) {
+    tbody.innerHTML = list.map(t => {
+      const badge = t.feito ? 'badge-ok' : 'badge-warn';
+      const label = t.feito ? 'Feito' : 'Pendente';
+      const rowCls = t.feito ? 'row-concluido' : '';
+      return `<tr class="${rowCls}">
+        <td><span class="badge ${badge}">${label}</span></td>
+        <td><div style="color:var(--text);font-weight:500">${t.titulo}</div></td>
+        <td class="mute">${t.resp}</td>
+        <td class="num-cell">${t.pf}</td>
+        <td class="num-cell">${t.ultimo}</td>
+        <td class="mute">${t.obs}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  // KPI cards (sempre baseados em TOTAL, não no filtro)
+  const feitas = tarefasParadas.filter(t => t.feito).length;
+  const pendentes = tarefasParadas.filter(t => !t.feito).length;
+  const total = tarefasParadas.length;
+  const pct = total > 0 ? Math.round(feitas / total * 100) : 0;
+  const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  setText('kpiFeitas', String(feitas).padStart(2,'0'));
+  setText('kpiPendentes', String(pendentes).padStart(2,'0'));
+  const kpiConcl = document.getElementById('kpiConclusao');
+  if (kpiConcl) kpiConcl.innerHTML = pct + '<span class="unit">%</span>';
+  setText('kpiTotal', String(total).padStart(2,'0'));
+
+  // donut center
+  const dPct = document.getElementById('paradaDonutPct');
+  const dSub = document.getElementById('paradaDonutSub');
+  if (dPct) dPct.innerHTML = pct + '<span class="unit">%</span>';
+  if (dSub) dSub.textContent = feitas + ' de ' + total + (paradaFilter !== 'all' ? ' · filtro: ' + (paradaFilter === 'feito' ? 'Feitas' : 'Pendentes') : '');
+
+  // bar list por responsável
+  const respMap = {};
+  tarefasParadas.forEach(t => {
+    if (!respMap[t.resp]) respMap[t.resp] = {feitas:0, pendentes:0, total:0};
+    if (t.feito) respMap[t.resp].feitas++; else respMap[t.resp].pendentes++;
+    respMap[t.resp].total++;
+  });
+  const maxTotal = Math.max(...Object.values(respMap).map(r => r.total), 1);
+  const respList = Object.entries(respMap)
+    .sort((a,b) => b[1].total - a[1].total)
+    .map(([nome, c]) => {
+      const pctFeitas = c.total > 0 ? (c.feitas / c.total * 100) : 0;
+      const totalPct = (c.total / maxTotal * 100);
+      return `<div class="bar-list-item">
+        <div class="name">${nome}</div>
+        <div class="track" style="position:relative">
+          <div class="fill" style="width:${totalPct}%;background:linear-gradient(90deg,${OK} 0%,${OK} ${pctFeitas}%,${WARN} ${pctFeitas}%,${WARN} 100%)"></div>
+        </div>
+        <div class="value"><span style="color:${OK}">${c.feitas}</span> <span style="color:var(--text-faint)">/</span> <span style="color:${WARN}">${c.pendentes}</span></div>
+      </div>`;
+    }).join('');
+  const respEl = document.getElementById('paradasResponsavelList');
+  if (respEl) respEl.innerHTML = respList;
+
+  // donut (cria 1x, depois só atualiza data se já existe)
+  const donutEl = document.getElementById('paradaDonut');
+  if (donutEl) {
+    if (paradaDonutChart) {
+      paradaDonutChart.data.datasets[0].data = [feitas, pendentes];
+      paradaDonutChart.update();
+    } else {
+      paradaDonutChart = new Chart(donutEl, {
+        type: 'doughnut',
+        data: { labels:['Feitas','Pendentes'], datasets:[{data:[feitas, pendentes], backgroundColor:[OK, WARN], borderWidth:0}]},
+        options: bigDonutOpts(drillParadaDonut)
+      });
+    }
+  }
+}
+
+// ====== COMMON INIT ======
+function initCommon() {
+  renderTicker('commonTicker');
+  renderRefresh('commonRefreshTimes','commonRefreshStatus');
+  renderConnectionBadge();
+  document.getElementById('commonTabelaPrazos').innerHTML = prazos.slice(0,10).map(p => `
+    <tr class="${rowClass(p.status)}">
+      <td class="num-cell">${p.data}</td>
+      <td class="mute">${p.dia}</td>
+      <td><div style="color:var(--text);font-weight:500">${p.titulo}</div></td>
+      <td>${statusBadge(p.status)}</td>
+    </tr>`).join('');
+
+  document.getElementById('commonTabelaAudiencias').innerHTML = audiencias.map(a => `
+    <tr>
+      <td class="num-cell">${a.data}<div class="mute" style="font-size:10px;font-weight:400">${a.dia}</div></td>
+      <td class="num-cell" style="color:var(--gold)">${a.hora}</td>
+      <td><div style="font-weight:500">${a.tipo}</div></td>
+      <td class="mute">${a.processo}</td>
+    </tr>`).join('');
+
+  // donut distribuição de prazos · COMUM apenas leitura (sem click/cursor)
+  new Chart(document.getElementById('commonDonut'), {
+    type: 'doughnut',
+    data: { labels:['Hoje OK','18.05','19-22.05','25-29.05','01-04.06'],
+            datasets:[{data:[3,4,5,7,2], backgroundColor:[OK, DANGER, WARN, GOLD_LIGHT, INFO], borderWidth:0}]},
+    options: {
+      cutout:'72%', rotation:-90,
+      plugins:{legend:{display:false},tooltip:{enabled:true,backgroundColor:'#0a0a0a',titleColor:GOLD_LIGHT,bodyColor:TEXT,borderColor:GOLD_DEEP,borderWidth:1,padding:10}}
+    }
+  });
+
+  drawSparklines(document.getElementById('common-app'));
+}
+
+// Boot: tenta buscar dados do Google Sheets ANTES de renderizar.
+// Se não tiver SHEETS_ID configurado, vai direto pro modo demo.
+(async () => {
+  await loadFromSheets();
+  applySession();
+})();
+</script>
+</body>
+</html>
