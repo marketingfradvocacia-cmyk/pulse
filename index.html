@@ -2089,6 +2089,7 @@ let presDonut1Chart = null;
 let presDonut2Chart = null;
 
 function enterPresentation() {
+  console.log('[PULSE] enterPresentation · build 2026-06-02-c · slides=' + PRES_SLIDES_COUNT + ' · intervalo=' + PRES_SLIDE_SECONDS + 's');
   document.body.classList.add('presenting');
   // pede fullscreen
   const elem = document.documentElement;
@@ -2103,8 +2104,10 @@ function enterPresentation() {
   showPresSlide(0);
   presSlideTimer = setInterval(() => {
     presSlideIdx = (presSlideIdx + 1) % PRES_SLIDES_COUNT;
+    console.log('[PULSE] auto-advance → slide ' + (presSlideIdx + 1));
     showPresSlide(presSlideIdx);
   }, PRES_SLIDE_SECONDS * 1000);
+  console.log('[PULSE] presSlideTimer configurado · id=' + presSlideTimer);
   startPresProgress();
   // auto-refresh
   presRefreshTimer = setInterval(async () => {
