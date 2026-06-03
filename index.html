@@ -488,6 +488,13 @@
   .pres-counter{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--text-mute);font-weight:700;flex:1}
   .pres-counter strong{color:var(--gold);font-size:14px}
   .pres-hint{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--text-faint);font-weight:600}
+  /* Indicador visual quando o loop está pausado */
+  body.pres-paused .pres-stage::after{
+    content:'⏸';position:absolute;top:24px;right:80px;
+    font-size:32px;color:var(--warn);opacity:.7;
+    text-shadow:0 0 18px rgba(201,169,97,.6);
+    animation:pulse-blink 1.6s infinite ease-in-out;pointer-events:none;z-index:5;
+  }
 
   /* Botão Exit no header */
   .pres-exit-btn{
@@ -1610,6 +1617,11 @@
 
   <footer class="pres-footer">
     <div class="pres-counter">Slide <strong id="presCounter">1</strong> / <strong id="presTotal">6</strong></div>
+    <div class="pres-hint" id="presKbdHint" style="margin-right:24px;color:var(--text-faint)">
+      <span style="color:var(--gold)">␣</span> pausa &nbsp;·&nbsp;
+      <span style="color:var(--gold)">←</span> <span style="color:var(--gold)">→</span> navega &nbsp;·&nbsp;
+      <span style="color:var(--gold)">esc</span> sair
+    </div>
     <div class="pres-hint" id="presLoopInfo">Loop · 15s por slide</div>
   </footer>
 </div>
@@ -2287,6 +2299,8 @@ function enterPresentation() {
 
 function exitPresentation() {
   document.body.classList.remove('presenting');
+  document.body.classList.remove('pres-paused');
+  presPaused = false;
   if (document.exitFullscreen && document.fullscreenElement) document.exitFullscreen().catch(()=>{});
   [presSlideTimer, presRefreshTimer, presProgressTimer, presClockTimer].forEach(t => { if (t) clearInterval(t); });
   presSlideTimer = presRefreshTimer = presProgressTimer = presClockTimer = null;
@@ -2527,11 +2541,50 @@ function populatePresentationData() {
   }
 }
 
-// ESC sai do modo apresentação
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape' && document.body.classList.contains('presenting')) {
-    exitPresentation();
+// ====== CONTROLES TECLADO NA APRESENTAÇÃO ======
+//   ESC      → sair
+//   ESPAÇO   → pausa / retoma o loop automático
+//   ← / →    → slide anterior / próximo (manual; loop fica pausado se já estava)
+let presPaused = false;
+
+function togglePresPause() {
+  presPaused = !presPaused;
+  const hint = document.getElementById('presLoopInfo');
+  if (presPaused) {
+    if (presSlideTimer) clearInterval(presSlideTimer);
+    presSlideTimer = null;
+    if (hint) hint.innerHTML = '<span style="color:var(--warn)">⏸ PAUSADO</span> · espaço retoma';
+    document.body.classList.add('pres-paused');
+  } else {
+    presSlideTimer = setInterval(() => {
+      presSlideIdx = (presSlideIdx + 1) % PRES_SLIDES_COUNT;
+      showPresSlide(presSlideIdx);
+    }, PRES_SLIDE_SECONDS * 1000);
+    if (hint) hint.textContent = 'Loop · ' + PRES_SLIDE_SECONDS + 's por slide';
+    document.body.classList.remove('pres-paused');
   }
+}
+
+function presNavigate(delta) {
+  // Para o timer antes de mudar manualmente (evita race condition)
+  if (presSlideTimer) { clearInterval(presSlideTimer); presSlideTimer = null; }
+  presSlideIdx = (presSlideIdx + delta + PRES_SLIDES_COUNT) % PRES_SLIDES_COUNT;
+  showPresSlide(presSlideIdx);
+  // Se NÃO estava pausado, reinicia o loop a partir deste slide
+  if (!presPaused) {
+    presSlideTimer = setInterval(() => {
+      presSlideIdx = (presSlideIdx + 1) % PRES_SLIDES_COUNT;
+      showPresSlide(presSlideIdx);
+    }, PRES_SLIDE_SECONDS * 1000);
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if (!document.body.classList.contains('presenting')) return;
+  if (e.key === 'Escape') { exitPresentation(); return; }
+  if (e.key === ' ' || e.code === 'Space') { e.preventDefault(); togglePresPause(); return; }
+  if (e.key === 'ArrowRight') { e.preventDefault(); presNavigate(+1); return; }
+  if (e.key === 'ArrowLeft')  { e.preventDefault(); presNavigate(-1); return; }
 });
 
 // sair do fullscreen sai do modo apresentação
