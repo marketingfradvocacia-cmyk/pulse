@@ -372,38 +372,42 @@
   #presentation-app .pres-slide[data-slide="5"] .kpi.kpi-compact .kpi-num .unit{font-size:26px}
   #presentation-app .pres-slide[data-slide="5"] .kpi.kpi-compact .kpi-sub{font-size:15px;line-height:1.4}
 
-  /* Slide 2 e 6 · panels com overflow controlado pra não vazar fora */
+  /* Slide 2 e 6 · panels visíveis (sem corte) + margem negativa do item zerada */
   #presentation-app .pres-slide[data-slide="2"] .panel,
-  #presentation-app .pres-slide[data-slide="6"] .panel{overflow:hidden;min-height:0;display:flex;flex-direction:column}
+  #presentation-app .pres-slide[data-slide="6"] .panel{overflow:visible;min-height:0;display:flex;flex-direction:column}
+  /* Anula o margin:0 -8px do .bar-list-item global que causava corte de primeira letra/última tag */
+  #presentation-app .bar-list-item{margin:0 !important}
   #presentation-app .pres-slide[data-slide="2"] .bar-list,
   #presentation-app .pres-slide[data-slide="6"] .bar-list{gap:14px;overflow:hidden;flex:1}
+  #presentation-app .pres-slide[data-slide="2"] .bar-list{padding:0 8px}
   #presentation-app .pres-slide[data-slide="2"] .bar-list-item{
-    gap:14px;padding:8px 0;
+    gap:16px;padding:8px 4px;
     grid-template-columns:1fr 80px 100px !important;
-    align-items:center;
+    align-items:center;overflow:visible;
   }
   #presentation-app .pres-slide[data-slide="2"] .bar-list-item .name{
     font-size:17px;line-height:1.35;
     white-space:normal;word-break:break-word;overflow:visible;text-overflow:clip;
-    padding-right:8px;
+    padding:0 8px 0 4px;
   }
   #presentation-app .pres-slide[data-slide="2"] .bar-list-item .track{height:10px}
   #presentation-app .pres-slide[data-slide="2"] .bar-list-item .value{
     font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;
+    text-align:right;padding-right:6px;
   }
   /* Slide 6 · 3 painéis estreitos · escala TV 43" · item em 2 linhas (nome + track/tag) */
   #presentation-app .pres-slide[data-slide="6"] .panel-title{font-size:14px;letter-spacing:.3em;margin-bottom:18px}
-  #presentation-app .pres-slide[data-slide="6"] .bar-list{gap:18px}
+  #presentation-app .pres-slide[data-slide="6"] .bar-list{gap:18px;padding:0 6px}
   #presentation-app .pres-slide[data-slide="6"] .bar-list-item{
     display:grid !important;
-    grid-template-columns:1fr auto !important;
+    grid-template-columns:1fr 110px !important;
     grid-template-rows:auto auto;
-    gap:6px 14px;padding:8px 0;align-items:center;
+    gap:6px 12px;padding:8px 4px;align-items:center;overflow:visible;
   }
   #presentation-app .pres-slide[data-slide="6"] .bar-list-item .name{
     grid-column:1/-1;grid-row:1;
-    font-size:17px;line-height:1.35;white-space:normal;word-break:break-word;
-    color:var(--text);font-weight:500;
+    font-size:16px;line-height:1.35;white-space:normal;word-break:break-word;
+    color:var(--text);font-weight:500;padding-left:2px;
   }
   #presentation-app .pres-slide[data-slide="6"] .bar-list-item .track{
     grid-column:1;grid-row:2;
@@ -411,8 +415,8 @@
   }
   #presentation-app .pres-slide[data-slide="6"] .bar-list-item .value{
     grid-column:2;grid-row:2;
-    font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
-    white-space:nowrap;padding-left:8px;
+    font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+    white-space:nowrap;text-align:right;padding-right:4px;
   }
   /* Donut central do slide 6 · ajusta pra caber em painel de 1/3 */
   #presentation-app .pres-slide[data-slide="6"] .big-donut{max-height:300px}
@@ -1564,9 +1568,9 @@
     <div class="pres-slide" data-slide="4">
       <div class="pres-eyebrow">Calendário</div>
       <h1 class="pres-title">Próximas Audiências</h1>
-      <div class="panel" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;max-width:1100px;margin:0 auto;width:100%">
-        <div class="panel-title" style="align-self:flex-start">Próximas 3 audiências agendadas</div>
-        <div class="bar-list" id="presNextAudiencias" style="width:100%;align-self:stretch"></div>
+      <div class="panel" style="flex:1;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;max-width:1200px;margin:0 auto;width:100%">
+        <div class="panel-title">Próximas 3 audiências agendadas</div>
+        <div class="bar-list" id="presNextAudiencias" style="width:100%;margin-top:8px"></div>
       </div>
     </div>
 
