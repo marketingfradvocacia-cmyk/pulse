@@ -1330,9 +1330,13 @@
     </div>
     <nav class="sb-nav">
       <div class="sb-nav-label">Painel</div>
-      <div class="sb-tab active">
+      <div class="sb-tab active" onclick="showCommonTab('panorama',this)">
         <span class="icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></span>
         Panorama da Equipe
+      </div>
+      <div class="sb-tab" onclick="showCommonTab('agenda',this)">
+        <span class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+        Agenda
       </div>
     </nav>
     <div class="sb-filter">
@@ -1390,6 +1394,9 @@
     <div class="gold-rule-bottom"></div>
 
     <div class="main-body">
+
+      <!-- ====== SEÇÃO PANORAMA (padrão) ====== -->
+      <section id="common-section-panorama">
 
       <div class="alert">
         <div class="alert-title">Visão Equipe · Dados consolidados</div>
@@ -1452,6 +1459,42 @@
         <div class="alert-title">Status da Equipe · hoje 01.06</div>
         <div class="alert-body">Equipe operacional ativa · <strong style="color:var(--gold-soft)">13 publicações tratadas hoje</strong> · <strong style="color:var(--gold-soft)">7 colaboradores ativos no WorkMonitor</strong> · 2 audiências hoje. Nenhuma tarefa em estado de atenção.</div>
       </div>
+
+      </section>
+      <!-- ====== /SEÇÃO PANORAMA ====== -->
+
+      <!-- ====== SEÇÃO AGENDA (oculta por padrão) ====== -->
+      <section id="common-section-agenda" style="display:none">
+        <div class="alert">
+          <div class="alert-title">Agenda da Equipe · Audiências e Publicações</div>
+          <div class="alert-body">Próximos compromissos e publicações pendentes de tratamento. Atualizado em tempo real.</div>
+        </div>
+
+        <div class="kpi-grid grid-cols-4">
+          <div class="kpi"><div class="kpi-head"><div class="kpi-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg></div><div class="kpi-label">Audiências Agendadas</div></div><div class="kpi-mid"><div class="kpi-num gold" id="commonAgKpiAud">—</div></div><div class="kpi-foot"><canvas class="kpi-spark" data-spark="3,4,4,5,5,5,5" data-color="gold"></canvas><div class="kpi-sub" id="commonAgKpiAudSub">até 30.06</div></div></div>
+          <div class="kpi"><div class="kpi-head"><div class="kpi-icon icon-danger"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div><div class="kpi-label">Publicações p/ Tratar</div></div><div class="kpi-mid"><div class="kpi-num danger" id="commonAgKpiPub">—</div></div><div class="kpi-foot"><canvas class="kpi-spark" data-spark="8,7,6,5,5,5,5" data-color="danger"></canvas><div class="kpi-sub" id="commonAgKpiPubSub">pendentes</div></div></div>
+          <div class="kpi"><div class="kpi-head"><div class="kpi-icon icon-ok"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="kpi-label">Tratadas no Mês</div></div><div class="kpi-mid"><div class="kpi-num ok" id="commonAgKpiTrat">—</div></div><div class="kpi-foot"><canvas class="kpi-spark" data-spark="0,1,1,2,2,3,3" data-color="ok"></canvas><div class="kpi-sub">total</div></div></div>
+          <div class="kpi"><div class="kpi-head"><div class="kpi-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="kpi-label">Próximo Evento</div></div><div class="kpi-mid"><div class="kpi-num gold" id="commonAgKpiProxDias" style="font-size:48px">—</div></div><div class="kpi-foot"><div class="kpi-sub" id="commonAgKpiProxSub">—</div></div></div>
+        </div>
+
+        <div class="next-event" id="commonAgNextEvent">
+          <div class="ev-eyebrow">Próxima audiência</div>
+          <div class="ev-title" id="commonAgNextTitle">—</div>
+          <div class="ev-desc" id="commonAgNextDesc">—</div>
+        </div>
+
+        <div class="panels-grid grid-cols-2">
+          <div class="panel" style="padding:0">
+            <div style="padding:20px 28px;border-bottom:1px solid var(--line)"><div class="panel-title" style="margin:0">Audiências · Até 30.06</div></div>
+            <div class="table-wrap"><table><thead><tr><th>Data</th><th>Hora</th><th>Tipo</th><th>Processo</th></tr></thead><tbody id="commonAgTabAud"></tbody></table></div>
+          </div>
+          <div class="panel" style="padding:0">
+            <div style="padding:20px 28px;border-bottom:1px solid var(--line)"><div class="panel-title" style="margin:0">Publicações Pendentes</div></div>
+            <div class="table-wrap"><table><thead><tr><th>Data</th><th>Processo</th><th>Resp.</th><th>Status</th></tr></thead><tbody id="commonAgTabPub"></tbody></table></div>
+          </div>
+        </div>
+      </section>
+      <!-- ====== /SEÇÃO AGENDA ====== -->
 
     </div>
 
@@ -2858,6 +2901,73 @@ function initCommon() {
   });
 
   drawSparklines(document.getElementById('common-app'));
+
+  // ====== Popula a seção Agenda (KPIs + próxima audiência + tabelas) ======
+  const _parseAg = (d) => { const p = (d||'').split('.'); return p.length>=2 ? Number(p[1])*100+Number(p[0]) : 99999; };
+  const _audSorted = [...audiencias].sort((a,b) => _parseAg(a.data) - _parseAg(b.data));
+  const _audCount = audiencias.length;
+  const _pubsPend = publicacoes.filter(p => p.status === 'pendente').length;
+  const _pubsTrat = publicacoes.filter(p => p.status === 'tratada').length;
+  const _prox = _audSorted[0];
+  // KPIs
+  const _set = (id,v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  _set('commonAgKpiAud', String(_audCount).padStart(2,'0'));
+  if (_audSorted.length) _set('commonAgKpiAudSub', _audSorted[0].data + ' → ' + _audSorted[_audSorted.length-1].data);
+  _set('commonAgKpiPub', String(_pubsPend).padStart(2,'0'));
+  _set('commonAgKpiPubSub', _pubsPend === 0 ? 'nenhuma pendente' : 'aguardando tratamento');
+  _set('commonAgKpiTrat', String(_pubsTrat).padStart(2,'0'));
+  // Próximo evento — contagem de dias
+  if (_prox) {
+    const hoje = new Date();
+    const parts = (_prox.data || '').split('.');
+    let dias = '—', subTxt = '';
+    if (parts.length >= 2) {
+      const dt = new Date(hoje.getFullYear(), Number(parts[1])-1, Number(parts[0]));
+      dias = Math.max(0, Math.round((dt - hoje) / (1000*60*60*24)));
+      subTxt = dias === 0 ? 'hoje' : dias === 1 ? 'amanhã' : 'em ' + dias + ' dias';
+    }
+    _set('commonAgKpiProxDias', dias);
+    _set('commonAgKpiProxSub', _prox.data + ' · ' + subTxt);
+    _set('commonAgNextTitle', (_prox.dia ? _prox.dia + ' ' : '') + _prox.data + ' · ' + _prox.hora + ' · ' + _prox.tipo);
+    _set('commonAgNextDesc', _prox.processo);
+  } else {
+    _set('commonAgKpiProxDias', '—');
+    _set('commonAgKpiProxSub', 'nenhuma agendada');
+    _set('commonAgNextTitle', 'Nenhuma audiência agendada');
+    _set('commonAgNextDesc', '—');
+  }
+  // Tabela Audiências
+  document.getElementById('commonAgTabAud').innerHTML = _audSorted.map(a => `
+    <tr>
+      <td class="num-cell">${a.data}<div class="mute" style="font-size:10px;font-weight:400">${a.dia||''}</div></td>
+      <td class="num-cell" style="color:var(--gold)">${a.hora}</td>
+      <td><div style="font-weight:500">${a.tipo}</div></td>
+      <td class="mute">${a.processo}</td>
+    </tr>`).join('') || '<tr><td colspan="4" class="mute" style="text-align:center;padding:24px">Nenhuma audiência agendada</td></tr>';
+  // Tabela Publicações
+  document.getElementById('commonAgTabPub').innerHTML = publicacoes.map(p => {
+    const cls = p.status === 'pendente' ? 'badge-warn' : 'badge-ok';
+    const txt = p.status === 'pendente' ? 'Pendente' : 'Tratada';
+    return `<tr>
+      <td class="num-cell">${p.data}</td>
+      <td><div style="color:var(--text)">${p.processo}</div></td>
+      <td class="mute">${p.resp||'—'}</td>
+      <td><span class="badge ${cls}">${txt}</span></td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="4" class="mute" style="text-align:center;padding:24px">Sem publicações</td></tr>';
+}
+
+// Alterna entre Panorama e Agenda no modo Equipe
+function showCommonTab(name, el) {
+  document.getElementById('common-section-panorama').style.display = (name === 'panorama' ? '' : 'none');
+  document.getElementById('common-section-agenda').style.display   = (name === 'agenda'   ? '' : 'none');
+  // marca tab ativa
+  if (el) {
+    el.parentElement.querySelectorAll('.sb-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+  }
+  // re-renderiza sparklines da seção visível (caso fique invisible e depois visible)
+  setTimeout(() => drawSparklines(document.getElementById('common-app')), 50);
 }
 
 // Boot: tenta buscar dados do Google Sheets ANTES de renderizar.
