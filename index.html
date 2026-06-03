@@ -362,17 +362,34 @@
     font-size:16px;font-weight:600;color:var(--ok);text-align:right;font-variant-numeric:tabular-nums;
   }
 
+  /* Slide 2 e 6 · panels com overflow controlado pra não vazar fora */
+  #presentation-app .pres-slide[data-slide="2"] .panel,
+  #presentation-app .pres-slide[data-slide="6"] .panel{overflow:hidden;min-height:0;display:flex;flex-direction:column}
+  #presentation-app .pres-slide[data-slide="2"] .bar-list,
+  #presentation-app .pres-slide[data-slide="6"] .bar-list{gap:14px;overflow:hidden;flex:1}
+  #presentation-app .pres-slide[data-slide="2"] .bar-list-item{gap:16px;padding:6px 0;grid-template-columns:1fr 100px 90px !important}
+  #presentation-app .pres-slide[data-slide="2"] .bar-list-item .name{font-size:15px}
+  #presentation-app .pres-slide[data-slide="2"] .bar-list-item .value{font-size:14px}
+  #presentation-app .pres-slide[data-slide="6"] .bar-list-item{gap:12px;padding:5px 0;grid-template-columns:1fr 60px 70px !important}
+  #presentation-app .pres-slide[data-slide="6"] .bar-list-item .name{font-size:13px;line-height:1.3;white-space:normal}
+  #presentation-app .pres-slide[data-slide="6"] .bar-list-item .value{font-size:12px}
+  /* Sem hover deslocando elementos no slide 2 e 6 */
+  #presentation-app .pres-slide[data-slide="2"] .bar-list-item:hover,
+  #presentation-app .pres-slide[data-slide="6"] .bar-list-item:hover{padding-left:0;background:transparent}
+  #presentation-app .pres-slide[data-slide="2"] .bar-list-item:hover .value,
+  #presentation-app .pres-slide[data-slide="6"] .bar-list-item:hover .value{transform:none;font-weight:500}
+
   /* Panel escalado */
   #presentation-app .panel{padding:36px 44px;min-height:0;background:var(--bg-card);border:1px solid var(--line-soft)}
   #presentation-app .panel-title{font-size:13px;letter-spacing:.32em;margin-bottom:24px}
 
   /* Big donut escalado */
-  #presentation-app .big-donut{height:420px;max-height:420px}
-  #presentation-app .big-donut canvas{height:400px !important;max-height:400px !important;max-width:400px !important}
-  #presentation-app .big-donut-value{font-size:96px}
-  #presentation-app .big-donut-value .unit{font-size:36px}
-  #presentation-app .big-donut-label{font-size:13px;letter-spacing:.36em;max-width:200px;margin-top:10px}
-  #presentation-app .big-donut-sub{font-size:14px;margin-top:8px}
+  #presentation-app .big-donut{height:auto;max-height:340px;min-height:240px;flex:1;display:flex;align-items:center;justify-content:center;position:relative}
+  #presentation-app .big-donut canvas{height:320px !important;max-height:320px !important;max-width:320px !important;width:auto !important}
+  #presentation-app .big-donut-value{font-size:64px;line-height:1}
+  #presentation-app .big-donut-value .unit{font-size:24px}
+  #presentation-app .big-donut-label{font-size:11px;letter-spacing:.32em;max-width:180px;margin-top:8px}
+  #presentation-app .big-donut-sub{font-size:12px;margin-top:6px}
 
   /* Bar list escalada */
   #presentation-app .bar-list{gap:20px}
@@ -2245,7 +2262,7 @@ function populatePresentationData() {
   const proxPrazos = [...prazos]
     .filter(p => !((p.status||'').toLowerCase().includes('conclu')))
     .sort((a,b) => parseDataKey(a.data) - parseDataKey(b.data))
-    .slice(0, 5);
+    .slice(0, 6);
   document.getElementById('presNextPrazos').innerHTML = proxPrazos.map(p => {
     const isUrgent = (p.status||'').toLowerCase().includes('3 dias');
     const cls = isUrgent ? 'danger' : '';
