@@ -426,31 +426,41 @@
   #presentation-app .pres-slide[data-slide="6"] .big-donut-label{font-size:13px;letter-spacing:.34em;margin-top:10px}
   #presentation-app .pres-slide[data-slide="6"] .big-donut-sub{font-size:15px;margin-top:10px;font-weight:500}
   #presentation-app .pres-slide[data-slide="6"] .big-donut-sub span{font-weight:700;color:var(--gold-soft)}
-  /* Resumo abaixo do donut do slide 6 · "27 feitas · 48 pendentes" */
-  #presentation-app .pres-slide[data-slide="6"] .pres-donut6-summary{
+  /* Resumo abaixo do donut · usado nos slides 2 e 6 */
+  #presentation-app .pres-donut2-summary,
+  #presentation-app .pres-donut6-summary{
     display:flex;align-items:center;justify-content:center;gap:16px;
     margin-top:20px;padding-top:18px;
     border-top:1px solid var(--line-soft);
   }
-  #presentation-app .pres-slide[data-slide="6"] .pres-donut6-summary .ds-item{
+  #presentation-app .pres-donut2-summary .ds-item,
+  #presentation-app .pres-donut6-summary .ds-item{
     display:flex;align-items:baseline;gap:10px;
   }
-  #presentation-app .pres-slide[data-slide="6"] .pres-donut6-summary .ds-dot{
+  #presentation-app .pres-donut2-summary .ds-dot,
+  #presentation-app .pres-donut6-summary .ds-dot{
     width:10px;height:10px;border-radius:50%;align-self:center;flex-shrink:0;
   }
-  #presentation-app .pres-slide[data-slide="6"] .pres-donut6-summary .ds-dot.ok{
-    background:var(--ok);box-shadow:0 0 8px rgba(123,167,118,.6);
-  }
-  #presentation-app .pres-slide[data-slide="6"] .pres-donut6-summary .ds-dot.warn{
+  #presentation-app .pres-donut2-summary .ds-dot.gold,
+  #presentation-app .pres-donut6-summary .ds-dot.warn{
     background:var(--gold);box-shadow:0 0 8px rgba(170,132,61,.6);
   }
-  #presentation-app .pres-slide[data-slide="6"] .pres-donut6-summary .ds-num{
+  #presentation-app .pres-donut6-summary .ds-dot.ok{
+    background:var(--ok);box-shadow:0 0 8px rgba(123,167,118,.6);
+  }
+  #presentation-app .pres-donut2-summary .ds-dot.mute{
+    background:#3a3a3a;box-shadow:0 0 6px rgba(80,80,80,.5);
+  }
+  #presentation-app .pres-donut2-summary .ds-num,
+  #presentation-app .pres-donut6-summary .ds-num{
     font-size:32px;font-weight:300;color:var(--text);font-variant-numeric:tabular-nums;letter-spacing:-.01em;line-height:1;
   }
-  #presentation-app .pres-slide[data-slide="6"] .pres-donut6-summary .ds-lbl{
+  #presentation-app .pres-donut2-summary .ds-lbl,
+  #presentation-app .pres-donut6-summary .ds-lbl{
     font-size:11px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--text-mute);
   }
-  #presentation-app .pres-slide[data-slide="6"] .pres-donut6-summary .ds-sep{
+  #presentation-app .pres-donut2-summary .ds-sep,
+  #presentation-app .pres-donut6-summary .ds-sep{
     color:var(--gold);opacity:.5;font-size:20px;
   }
   /* Sem hover deslocando elementos no slide 2 e 6 */
@@ -1613,7 +1623,20 @@
             <div class="big-donut-center">
               <div class="big-donut-value" id="presDonut1Val">—<span class="unit">%</span></div>
               <div class="big-donut-label">Cumpridos</div>
-              <div class="big-donut-sub" id="presDonut1Detail">—</div>
+            </div>
+          </div>
+          <!-- Resumo abaixo do gráfico (saiu do centro do donut) -->
+          <div class="pres-donut2-summary">
+            <div class="ds-item">
+              <span class="ds-dot gold"></span>
+              <span class="ds-num" id="presDonut1Feitos">—</span>
+              <span class="ds-lbl">cumpridos</span>
+            </div>
+            <div class="ds-sep">·</div>
+            <div class="ds-item">
+              <span class="ds-dot mute"></span>
+              <span class="ds-num" id="presDonut1Aberto">—</span>
+              <span class="ds-lbl">a concluir</span>
             </div>
           </div>
         </div>
@@ -2477,7 +2500,8 @@ function populatePresentationData() {
   const aberto = totalPrazos - concluidos;
   const taxaCumprimento = totalPrazos > 0 ? Math.round((concluidos/totalPrazos)*100) : 0;
   document.getElementById('presDonut1Val').innerHTML = taxaCumprimento + '<span class="unit">%</span>';
-  document.getElementById('presDonut1Detail').textContent = `${concluidos} de ${totalPrazos}`;
+  document.getElementById('presDonut1Feitos').textContent = concluidos;
+  document.getElementById('presDonut1Aberto').textContent = aberto;
   const d1 = document.getElementById('presDonut1');
   if (d1) {
     if (presDonut1Chart) presDonut1Chart.destroy();
