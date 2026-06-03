@@ -340,31 +340,31 @@
   #presentation-app .kpi.kpi-compact .kpi-foot{border-top:none;padding-top:0;min-height:0}
   #presentation-app .kpi.kpi-compact .kpi-sub{font-size:12px}
 
-  /* Slide 5 (Aproveitamento) · escala TV 43" · nome completo sem corte */
-  #presentation-app .pres-slide[data-slide="5"] .panel{overflow:hidden;min-height:0}
+  /* Slide 5 (Aproveitamento) · escala TV 43" · nome completo sem corte · colunas maiores */
+  #presentation-app .pres-slide[data-slide="5"] .panel{overflow:visible;min-height:0}
   #presentation-app .pres-slide[data-slide="5"] .panel-title{font-size:15px;letter-spacing:.34em;margin-bottom:20px}
-  #presentation-app .pres-slide[data-slide="5"] .bar-list{gap:18px;overflow:hidden}
+  #presentation-app .pres-slide[data-slide="5"] .bar-list{gap:18px;overflow:visible;padding:0 6px}
   #presentation-app .pres-slide[data-slide="5"] .bar-list-item{
-    grid-template-columns:minmax(360px,1.4fr) 2fr 110px 110px 90px !important;
-    gap:24px;padding:8px 0;align-items:center;
+    grid-template-columns:minmax(380px,1.4fr) 2fr 130px 130px 120px !important;
+    gap:24px;padding:8px 4px;align-items:center;overflow:visible;
   }
-  #presentation-app .pres-slide[data-slide="5"] .bar-list-item:hover{padding-left:0;background:transparent}
+  #presentation-app .pres-slide[data-slide="5"] .bar-list-item:hover{padding-left:4px;background:transparent}
   #presentation-app .pres-slide[data-slide="5"] .bar-list-item:hover .name{color:var(--text)}
   #presentation-app .pres-slide[data-slide="5"] .bar-list-item:hover .value{transform:none;font-weight:600}
   #presentation-app .pres-slide[data-slide="5"] .bar-list-item .name{
     font-size:22px;font-weight:500;line-height:1.25;
     white-space:normal;overflow:visible;text-overflow:clip;
-    word-break:break-word;
+    word-break:break-word;padding-left:4px;
   }
   #presentation-app .pres-slide[data-slide="5"] .bar-list-item .track{height:14px}
   #presentation-app .pres-slide[data-slide="5"] .bar-list-item .col-aprov{
-    font-size:28px;font-weight:600;color:var(--gold-soft);text-align:right;font-variant-numeric:tabular-nums;letter-spacing:.02em;
+    font-size:28px;font-weight:600;color:var(--gold-soft);text-align:right;font-variant-numeric:tabular-nums;letter-spacing:.02em;padding-right:4px;
   }
   #presentation-app .pres-slide[data-slide="5"] .bar-list-item .col-capt{
-    font-size:18px;font-weight:500;color:var(--text-mute);text-align:right;font-variant-numeric:tabular-nums;
+    font-size:18px;font-weight:500;color:var(--text-mute);text-align:right;font-variant-numeric:tabular-nums;padding-right:4px;
   }
   #presentation-app .pres-slide[data-slide="5"] .bar-list-item .col-score{
-    font-size:22px;font-weight:700;color:var(--ok);text-align:right;font-variant-numeric:tabular-nums;
+    font-size:22px;font-weight:700;color:var(--ok);text-align:right;font-variant-numeric:tabular-nums;padding-right:8px;letter-spacing:.01em;
   }
   /* KPI compactos topo · escala TV */
   #presentation-app .pres-slide[data-slide="5"] .kpi.kpi-compact .kpi-label{font-size:13px;letter-spacing:.3em}
@@ -377,9 +377,20 @@
   #presentation-app .pres-slide[data-slide="6"] .panel{overflow:hidden;min-height:0;display:flex;flex-direction:column}
   #presentation-app .pres-slide[data-slide="2"] .bar-list,
   #presentation-app .pres-slide[data-slide="6"] .bar-list{gap:14px;overflow:hidden;flex:1}
-  #presentation-app .pres-slide[data-slide="2"] .bar-list-item{gap:16px;padding:6px 0;grid-template-columns:1fr 100px 90px !important}
-  #presentation-app .pres-slide[data-slide="2"] .bar-list-item .name{font-size:15px}
-  #presentation-app .pres-slide[data-slide="2"] .bar-list-item .value{font-size:14px}
+  #presentation-app .pres-slide[data-slide="2"] .bar-list-item{
+    gap:14px;padding:8px 0;
+    grid-template-columns:1fr 80px 100px !important;
+    align-items:center;
+  }
+  #presentation-app .pres-slide[data-slide="2"] .bar-list-item .name{
+    font-size:17px;line-height:1.35;
+    white-space:normal;word-break:break-word;overflow:visible;text-overflow:clip;
+    padding-right:8px;
+  }
+  #presentation-app .pres-slide[data-slide="2"] .bar-list-item .track{height:10px}
+  #presentation-app .pres-slide[data-slide="2"] .bar-list-item .value{
+    font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;
+  }
   /* Slide 6 · 3 painéis estreitos · escala TV 43" · item em 2 linhas (nome + track/tag) */
   #presentation-app .pres-slide[data-slide="6"] .panel-title{font-size:14px;letter-spacing:.3em;margin-bottom:18px}
   #presentation-app .pres-slide[data-slide="6"] .bar-list{gap:18px}
@@ -1543,19 +1554,19 @@
     <div class="pres-slide" data-slide="3">
       <div class="pres-eyebrow">Distribuição de Trabalho</div>
       <h1 class="pres-title">Tarefas por Responsável</h1>
-      <div class="panel" style="flex:1;display:flex;flex-direction:column;justify-content:center">
+      <div class="panel" style="flex:1;display:flex;flex-direction:column;justify-content:flex-start">
         <div class="panel-title">Feitas / Pendentes por executor</div>
-        <div class="bar-list" id="presBarList1"></div>
+        <div class="bar-list" id="presBarList1" style="margin-top:8px"></div>
       </div>
     </div>
 
-    <!-- SLIDE 4: Próximas Audiências (bar-list custom) -->
+    <!-- SLIDE 4: Próximas Audiências (caixa centralizada · horário colado no evento) -->
     <div class="pres-slide" data-slide="4">
       <div class="pres-eyebrow">Calendário</div>
       <h1 class="pres-title">Próximas Audiências</h1>
-      <div class="panel" style="flex:1;display:flex;flex-direction:column;justify-content:center">
-        <div class="panel-title">Próximas 3 audiências agendadas</div>
-        <div class="bar-list" id="presNextAudiencias"></div>
+      <div class="panel" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;max-width:1100px;margin:0 auto;width:100%">
+        <div class="panel-title" style="align-self:flex-start">Próximas 3 audiências agendadas</div>
+        <div class="bar-list" id="presNextAudiencias" style="width:100%;align-self:stretch"></div>
       </div>
     </div>
 
@@ -1582,7 +1593,7 @@
       </div>
       <div class="panel" style="flex:1;display:flex;flex-direction:column;min-height:0">
         <div class="panel-title">Top 6 colaboradores · Aproveitamento · Captadas · Score</div>
-        <div style="display:grid;grid-template-columns:minmax(360px,1.4fr) 2fr 110px 110px 90px;gap:24px;padding:10px 0 14px;border-bottom:1px solid var(--line-soft);margin-bottom:10px;font-size:13px;letter-spacing:.28em;text-transform:uppercase;color:var(--text-faint);font-weight:700">
+        <div style="display:grid;grid-template-columns:minmax(380px,1.4fr) 2fr 130px 130px 120px;gap:24px;padding:10px 4px 14px;border-bottom:1px solid var(--line-soft);margin-bottom:10px;font-size:13px;letter-spacing:.28em;text-transform:uppercase;color:var(--text-faint);font-weight:700">
           <div>Colaborador</div>
           <div></div>
           <div style="text-align:right">Aprov.</div>
@@ -2442,16 +2453,16 @@ function populatePresentationData() {
     }
     const tag = dias === 0 ? 'HOJE' : dias === 1 ? 'AMANHÃ' : `EM ${dias} DIAS`;
     const tagColor = dias <= 3 ? 'var(--danger)' : dias <= 7 ? 'var(--warn)' : 'var(--gold)';
-    return `<div class="bar-list-item" style="grid-template-columns:auto 1fr auto">
+    return `<div class="bar-list-item" style="grid-template-columns:auto auto auto;gap:32px;justify-content:center;padding:16px 0">
       <div style="display:flex;flex-direction:column;align-items:flex-start;min-width:130px">
-        <div style="font-size:22px;font-weight:600;color:var(--gold-soft);font-variant-numeric:tabular-nums">${a.data}</div>
+        <div style="font-size:24px;font-weight:600;color:var(--gold-soft);font-variant-numeric:tabular-nums">${a.data}</div>
         <div style="font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:${tagColor};margin-top:4px">${tag}</div>
       </div>
-      <div style="min-width:0">
+      <div style="min-width:0;display:flex;flex-direction:column;align-items:flex-start">
         <div style="font-size:22px;color:var(--text);font-weight:500">${a.tipo}</div>
         <div style="font-size:14px;color:var(--text-mute);margin-top:4px">${a.processo}</div>
       </div>
-      <div style="font-size:28px;font-weight:300;color:var(--gold);letter-spacing:.04em">${a.hora}</div>
+      <div style="font-size:28px;font-weight:300;color:var(--gold);letter-spacing:.04em;align-self:center">${a.hora}</div>
     </div>`;
   }).join('') || '<div style="color:var(--text-mute);text-align:center;padding:24px">Sem audiências agendadas</div>';
 
