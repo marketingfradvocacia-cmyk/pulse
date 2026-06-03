@@ -340,27 +340,37 @@
   #presentation-app .kpi.kpi-compact .kpi-foot{border-top:none;padding-top:0;min-height:0}
   #presentation-app .kpi.kpi-compact .kpi-sub{font-size:12px}
 
-  /* Slide 5 (Aproveitamento) · bar-list sem vazar, sem hover, valores alinhados em colunas fixas */
+  /* Slide 5 (Aproveitamento) · escala TV 43" · nome completo sem corte */
   #presentation-app .pres-slide[data-slide="5"] .panel{overflow:hidden;min-height:0}
-  #presentation-app .pres-slide[data-slide="5"] .bar-list{gap:14px;overflow:hidden}
+  #presentation-app .pres-slide[data-slide="5"] .panel-title{font-size:15px;letter-spacing:.34em;margin-bottom:20px}
+  #presentation-app .pres-slide[data-slide="5"] .bar-list{gap:18px;overflow:hidden}
   #presentation-app .pres-slide[data-slide="5"] .bar-list-item{
-    grid-template-columns:220px 1fr 90px 80px 70px !important;
-    gap:18px;padding:6px 0;
+    grid-template-columns:minmax(360px,1.4fr) 2fr 110px 110px 90px !important;
+    gap:24px;padding:8px 0;align-items:center;
   }
   #presentation-app .pres-slide[data-slide="5"] .bar-list-item:hover{padding-left:0;background:transparent}
   #presentation-app .pres-slide[data-slide="5"] .bar-list-item:hover .name{color:var(--text)}
   #presentation-app .pres-slide[data-slide="5"] .bar-list-item:hover .value{transform:none;font-weight:600}
-  #presentation-app .pres-slide[data-slide="5"] .bar-list-item .name{font-size:17px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  #presentation-app .pres-slide[data-slide="5"] .bar-list-item .track{height:10px}
+  #presentation-app .pres-slide[data-slide="5"] .bar-list-item .name{
+    font-size:22px;font-weight:500;line-height:1.25;
+    white-space:normal;overflow:visible;text-overflow:clip;
+    word-break:break-word;
+  }
+  #presentation-app .pres-slide[data-slide="5"] .bar-list-item .track{height:14px}
   #presentation-app .pres-slide[data-slide="5"] .bar-list-item .col-aprov{
-    font-size:20px;font-weight:600;color:var(--gold-soft);text-align:right;font-variant-numeric:tabular-nums;letter-spacing:.02em;
+    font-size:28px;font-weight:600;color:var(--gold-soft);text-align:right;font-variant-numeric:tabular-nums;letter-spacing:.02em;
   }
   #presentation-app .pres-slide[data-slide="5"] .bar-list-item .col-capt{
-    font-size:14px;font-weight:500;color:var(--text-mute);text-align:right;font-variant-numeric:tabular-nums;
+    font-size:18px;font-weight:500;color:var(--text-mute);text-align:right;font-variant-numeric:tabular-nums;
   }
   #presentation-app .pres-slide[data-slide="5"] .bar-list-item .col-score{
-    font-size:16px;font-weight:600;color:var(--ok);text-align:right;font-variant-numeric:tabular-nums;
+    font-size:22px;font-weight:700;color:var(--ok);text-align:right;font-variant-numeric:tabular-nums;
   }
+  /* KPI compactos topo · escala TV */
+  #presentation-app .pres-slide[data-slide="5"] .kpi.kpi-compact .kpi-label{font-size:13px;letter-spacing:.3em}
+  #presentation-app .pres-slide[data-slide="5"] .kpi.kpi-compact .kpi-num{font-size:64px}
+  #presentation-app .pres-slide[data-slide="5"] .kpi.kpi-compact .kpi-num .unit{font-size:26px}
+  #presentation-app .pres-slide[data-slide="5"] .kpi.kpi-compact .kpi-sub{font-size:15px;line-height:1.4}
 
   /* Slide 2 e 6 · panels com overflow controlado pra não vazar fora */
   #presentation-app .pres-slide[data-slide="2"] .panel,
@@ -1530,8 +1540,8 @@
         </div>
       </div>
       <div class="panel" style="flex:1;display:flex;flex-direction:column;min-height:0">
-        <div class="panel-title">Top 7 colaboradores · Aproveitamento · Captadas · Score</div>
-        <div style="display:grid;grid-template-columns:220px 1fr 90px 80px 70px;gap:18px;padding:6px 0 12px;border-bottom:1px solid var(--line-soft);margin-bottom:8px;font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--text-faint);font-weight:700">
+        <div class="panel-title">Top 6 colaboradores · Aproveitamento · Captadas · Score</div>
+        <div style="display:grid;grid-template-columns:minmax(360px,1.4fr) 2fr 110px 110px 90px;gap:24px;padding:10px 0 14px;border-bottom:1px solid var(--line-soft);margin-bottom:10px;font-size:13px;letter-spacing:.28em;text-transform:uppercase;color:var(--text-faint);font-weight:700">
           <div>Colaborador</div>
           <div></div>
           <div style="text-align:right">Aprov.</div>
@@ -2346,8 +2356,8 @@ function populatePresentationData() {
 
   const wmAtivos = wmAtivosAll.sort((a,b) => b.aprov - a.aprov);
   const maxAprov = Math.max(...wmAtivos.map(w => w.aprov), 1);
-  // Top 7 por aproveitamento (evita estourar painel verticalmente)
-  document.getElementById('presBarList2').innerHTML = wmAtivos.slice(0, 7).map(w => {
+  // Top 6 por aproveitamento (TV 43" · cada item maior pra leitura à distância)
+  document.getElementById('presBarList2').innerHTML = wmAtivos.slice(0, 6).map(w => {
     const cls = w.aprov >= 50 ? 'ok' : w.aprov >= 25 ? '' : 'warn';
     return `<div class="bar-list-item">
       <div class="name">${w.nome}</div>
