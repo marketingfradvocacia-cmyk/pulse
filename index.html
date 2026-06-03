@@ -481,11 +481,16 @@
   .pres-event-process{font-size:32px;color:var(--gold-soft);font-weight:600;margin-top:12px;max-width:90%}
 
   .pres-footer{
-    height:60px;padding:0 48px;flex-shrink:0;
+    height:90px;padding:0 48px;flex-shrink:0;
     display:flex;align-items:center;justify-content:space-between;
     border-top:1px solid var(--line);background:#0c0c0c;
   }
-  .pres-footer-logo{height:36px;width:auto;opacity:.85;object-fit:contain}
+  .pres-footer-logo{
+    height:64px;width:auto;object-fit:contain;
+    /* Remove o fundo preto da imagem (lighten "queima" o preto contra o fundo escuro do rodapé) */
+    mix-blend-mode:lighten;
+    opacity:1;
+  }
   .pres-counter{font-size:13px;letter-spacing:.34em;text-transform:uppercase;color:var(--text-mute);font-weight:700;text-align:right}
   .pres-counter strong{color:var(--gold);font-size:16px}
   .pres-hint{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--text-faint);font-weight:600}
